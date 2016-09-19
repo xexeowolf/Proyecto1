@@ -8,6 +8,7 @@ public class MatrizDinamica {
 	public MatrizDinamica(){
 		filas=columnas=0;
 		current=null;
+		
 	}
 	public void generarMatriz(int cantFilas, int cantCol){
 		ListasDobles primero=new ListasDobles();
