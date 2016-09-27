@@ -43,7 +43,7 @@ public class Interfaz extends Canvas {
 	}
 	
 	public void agregarActor(String nombre,Actor A){
-		actores.add(nombre, A);
+		actores.add(nombre, 9);
 		
 	}
 	
@@ -63,7 +63,7 @@ public class Interfaz extends Canvas {
 		g.drawImage(buffer,0,0,this);
 		
 	}
-	public void aplicarCambios(int cantJugadores){
+	/*public void aplicarCambios(int cantJugadores){
 			int cont=cantJugadores;
 		    while(cont!=0){
 		    	String nom=actores.getNombre();
@@ -87,6 +87,6 @@ public class Interfaz extends Canvas {
 		int k=8;
 		String j="jugador"+k;
 		System.out.print(j);
-	}
+	}*/
 	
 }

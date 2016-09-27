@@ -10,41 +10,35 @@ public class NodoMoto {
 	private String direccion;
 	private Pila poderes;
 	private Cola items;
-	private Actor imagen;
 	public NodoMatriz abajo;
 	public NodoMoto sig;
 	public NodoMoto ant;
 	
 	
-	public NodoMoto(int ancho,int alto,String nombre){
+	public NodoMoto(){
 		estela=3;
-		velocidad=1;
+		velocidad=300;
 		combustible=100;
 		poderes=new Pila();
 		items=new Cola();
-		imagen=new Actor(ancho,alto,nombre);
 		abajo=null;
 		sig=null;
 		ant=null;
+		direccion="abj";
 		
 	}
 	
-	public NodoMoto(int ancho,int alto,int ID){
-		imagen=new Actor(ancho,alto,"estela"+Integer.toString(ID)+".png");
+	public NodoMoto(boolean g){
 		abajo=null;
 		sig=null;
 		ant=null;
 	}
 
-	public void cambiarImagen(String h){
-		imagen.cambiarImagen(h);
+	public void agregarPoder(Item itm){
+		poderes.add(itm);
 	}
-	
-	public void agregarPoder(String n){
-		poderes.add(n);
-	}
-	public void agregarItem(String k,int y){
-		items.add(k,y);
+	public void agregarItem(Item itm){
+		items.add(itm);
 	}
 	public Cola getItems(){
 		return items;

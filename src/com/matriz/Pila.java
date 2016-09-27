@@ -1,14 +1,14 @@
 package com.matriz;
 
 public class Pila {
-	NodoString top;
-	int tam;
+	protected NodoItem top;
+	private int tam;
 	public Pila() {
 		top=null;
 		tam=0;
 	}
-	public void add(String dato){
-		NodoString nuevo= new NodoString(dato,null);
+	public void add(Item itm){
+		NodoItem nuevo= new NodoItem(itm);
 		if(top==null){
 			top=nuevo;
 		}else{
@@ -17,15 +17,19 @@ public class Pila {
 		}
 		tam++;
 	}
-	public String remove(){
+	public Item remove(){
 		if(top!=null){
-			String temp=top.info;
+			Item itm=top.getItem();
 			top=top.next;
 			tam--;
-			return temp;
+			return itm;
 		}else{
-			return "vacio";
+			return null;
 		}
 	}
 
+	public int getTam(){
+		return tam;
+	}
+	
 }

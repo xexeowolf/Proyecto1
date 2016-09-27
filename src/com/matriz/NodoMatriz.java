@@ -8,9 +8,14 @@ public class NodoMatriz {
 	private Item item;
 	private boolean ocupado;
 	private String ocupante;
+	private int posX;
+	private int posY;
 	
 	public NodoMatriz() {
 		down=left=right=up=null;
+		posX=posY=0;
+		ocupado=false;
+		
 	}
 	
 	public void setEstado(boolean v,String nom){
@@ -44,6 +49,18 @@ public class NodoMatriz {
 	}
 	public Item getItem(){
 		return item;
+	}
+	public int getPosX(){
+		return posX;
+	}
+	public int getPosY(){
+		return posY;
+	}
+	public void setPosX(int x){
+		posX=x;
+	}
+	public void setPosY(int y){
+		posY=y;
 	}
 	
 

@@ -1,8 +1,26 @@
 package com.servidorcliente;
 
-public class HiloMovimiento extends Thread {
+import com.matriz.MatrizDinamica;
 
-	private Actor actor;
+public class HiloMovimiento extends Thread {
+	
+	MatrizDinamica m;
+	
+	public HiloMovimiento(MatrizDinamica j){
+		m=j;
+	}
+	
+	public void run(){
+		m.rellenarMatriz();
+	}
+	
+	
+	
+	
+	
+	
+	
+	/*private Actor actor;
 	private Interfaz interfaz;
 	private int x;
 	private int y;
@@ -36,8 +54,8 @@ public class HiloMovimiento extends Thread {
 				if(0<=aumY && aumY<interfaz.alto-30){
 					actor.setPosY(aumY);
 				}
-				interfaz.aplicarCambios(interfaz.actores.getTam());
-				interfaz.aplicarBuffer(interfaz.actores.getTam());
+				//interfaz.aplicarCambios(interfaz.actores.getTam());
+				//interfaz.aplicarBuffer(interfaz.actores.getTam());
 			}
-	}
+	}*/
 }

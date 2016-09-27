@@ -2,16 +2,23 @@ package com.matriz;
 
 import java.util.Random;
 
+import com.servidorcliente.HiloMovimiento;
+import com.servidorcliente.Panel;
+import com.servidorcliente.Ventana;
+
 
 public class MatrizDinamica {
 	private int filas;
 	private int columnas;
 	private NodoMatriz colocador; 
+	private NodoMatriz distribuir;
 	private Fabrica factory;
 	private NodoMatriz esqSD;
 	private NodoMatriz esqSI;
 	private NodoMatriz esqII;
 	private NodoMatriz esqID;
+	private ListaActores actores;
+	
 	
 	public MatrizDinamica(int f,int c){
 		if(f!=0 && c!=0){
@@ -19,23 +26,36 @@ public class MatrizDinamica {
 		}else{
 			filas=columnas=0;
 			colocador=null;
+			distribuir=null;
 		}
 		factory=new Fabrica();
+		actores=new ListaActores();
 	}
 	
-	
+	public ListaActores getListaActores(){
+		return actores;
+	}
+	public NodoActor agregarActor(String nombre,int x,int y,NodoActor tmp){
+		return actores.add(nombre, x, y,tmp);
+	}
+	public void quitarActor(NodoActor tmp){
+		actores.remove(tmp.getPosX(), tmp.getPosY(),tmp.getNombre());
+	}
+	public void quitarActor(int x,int y,String nombre){
+		actores.remove(x,y,nombre);
+	}
 	
 	public NodoMatriz buscarLugar(){
-		if(esqSD.getEstado()){
+		if(esqSD.getEstado()==false){
 			return esqSD;
 		}
-		else if(esqSI.getEstado()){
+		else if(esqSI.getEstado()==false){
 			return esqSI;
 		}
-		else if(esqID.getEstado()){
+		else if(esqID.getEstado()==false){
 			return esqID;
 		}
-		else if(esqII.getEstado()){
+		else if(esqII.getEstado()==false){
 			return esqII;
 		}
 		else{
@@ -51,6 +71,16 @@ public class MatrizDinamica {
 		case "arr": while(pasos!=0 && colocador.up!=null){colocador=colocador.up;pasos--;};break;
 		}
 	}
+	
+	public void moverDistribuir(String direccion,int pasos){
+		switch(direccion){
+		case "der": while(pasos!=0 && distribuir.right!=null){distribuir=distribuir.right;pasos--;};break;
+		case "izq": while(pasos!=0 && distribuir.left!=null){distribuir=distribuir.left;pasos--;};break;
+		case "abj": while(pasos!=0 && distribuir.down!=null){distribuir=distribuir.down;pasos--;};break;
+		case "arr": while(pasos!=0 && distribuir.up!=null){distribuir=distribuir.up;pasos--;};break;
+		}
+	}
+	
 	
 	public String DireccionX(int x){
 		if(x>0){
@@ -80,14 +110,49 @@ public class MatrizDinamica {
 				Item elementos=factory.crearItem();
 				if(colocador.getItem()==null){
 					if(colocador.getEstado()==false){
+						switch(elementos.getNombre()){
+						case "combustible": actores.add("gas.gif", colocador.getPosX(), colocador.getPosY(),"item");break;
+						case "aumestela": actores.add("agregarEstela.gif", colocador.getPosX(), colocador.getPosY(),"item");break;
+						case "velocidad": actores.add("nitro.gif", colocador.getPosX(), colocador.getPosY(),"item");break;
+						case "bomba":actores.add("bicho.gif", colocador.getPosX(), colocador.getPosY(),"item");break;
+						case "escudo":actores.add("escudo.gif", colocador.getPosX(), colocador.getPosY(),"item");break;
+						}
 						colocador.setItem(elementos);
 						colocador.setEstado(true, "item");
 					}
-					
 			}
 		}
 			
 	}
+	
+	public void distribuirItem(int x,int y,Item itm){
+		moverDistribuir(DireccionX(x),Math.abs(x));
+		moverDistribuir(DireccionY(y),Math.abs(y));
+		if(distribuir!=esqSD && distribuir!=esqSI && distribuir!=esqII && distribuir!=esqID){
+			if(distribuir.getItem()==null){
+				if(distribuir.getEstado()==false){
+					switch(itm.getNombre()){
+					case "combustible": actores.add("gas.gif", distribuir.getPosX(), distribuir.getPosY(),"item");break;
+					case "aumestela": actores.add("agregarEstela.gif", distribuir.getPosX(), distribuir.getPosY(),"item");break;
+					case "velocidad": actores.add("nitro.gif", distribuir.getPosX(), distribuir.getPosY(),"item");break;
+					case "bomba":actores.add("bicho.gif", distribuir.getPosX(), distribuir.getPosY(),"item");break;
+					case "escudo":actores.add("escudo.gif", distribuir.getPosX(), distribuir.getPosY(),"item");break;
+					}
+					distribuir.setItem(itm);
+					distribuir.setEstado(true, "item");
+				}
+				else{
+					Random num=new Random();
+					distribuirItem(num.nextInt(filas),num.nextInt(2*columnas-1)-(columnas-1),itm);
+				}
+				
+		}
+	}
+		
+}
+
+	
+	
 	public NodoMatriz getColocador(){
 		return colocador;
 	}
@@ -96,16 +161,17 @@ public class MatrizDinamica {
 	}
 	
 	public void generarMatriz(int cantFilas, int cantCol){
-		ListasDobles primero=new ListasDobles();
+		ListasDobles primero=new ListasDobles(0,0);
 		primero.generarLista(cantCol);
 		filas++;
 		columnas=cantCol;
 		ListasDobles current=primero;
 		colocador=current.head;
+		distribuir=current.head;
 		esqSI=current.head;
 		esqSD=current.tail;
 		while(filas<cantFilas){
-			ListasDobles nuevo= new ListasDobles();
+			ListasDobles nuevo= new ListasDobles(0,filas*32);
 			nuevo.generarLista(cantCol);
 			ListasDobles temp=nuevo;
 			NodoMatriz recA=current.head;
@@ -123,75 +189,48 @@ public class MatrizDinamica {
 		esqID=current.tail;
 	}
 	
-	public void rellenarMatriz(){
+	public void distribMatriz(Cola items,Pila poderes){
 		Random num=new Random();
-		while(true){
-			colocarItems(num.nextInt(2*filas-1)-(filas-1),num.nextInt(2*columnas-1)-(columnas-1));
+		while(items.getTam()>0){
+			Item obj=items.remove();
+			distribuirItem(num.nextInt(2*filas-1)-(filas-1),num.nextInt(2*columnas-1)-(columnas-1),obj);
 		}
-	}
-	
-	
-	/*public void recorrer(){
-		while(colocador.right!=null){
-			if(colocador==esqSD){
-				System.out.print("esqSD");
-			}
-			if(colocador==esqSI){
-				System.out.print("esqSI");
-			}
-			System.out.print(colocador.getItem()+" derecha"+"\n");
-			colocador=colocador.right;
-		}
-		while(colocador.down!=null){
-			if(colocador==esqSD){
-				System.out.print("esqSD");
-			}
-			if(colocador==esqID){
-				System.out.print("esqID");
-			}
-			System.out.print(colocador.getItem()+" abajo"+"\n");
-			colocador=colocador.down;
-		}
-		while(colocador.left!=null){
-			if(colocador==esqID){
-				System.out.print("esqID");
-			}
-			if(colocador==esqII){
-				System.out.print("esqII");
-			}
-			System.out.print(colocador.getItem()+" izquierda"+"\n");
-			colocador=colocador.left;
-		}
-		while(colocador.up!=null){
-			if(colocador==esqII){
-				System.out.print("esqII");
-			}
-			if(colocador==esqSI){
-				System.out.print("esqSI");
-			}
-			System.out.print(colocador.getItem()+" arriba"+"\n");
-			colocador=colocador.up;
+		while(poderes.getTam()>0){
+			Item pod=poderes.remove();
+			distribuirItem(num.nextInt(2*filas-1)-(filas-1),num.nextInt(2*columnas-1)-(columnas-1),pod);
 		}
 		
 	}
 	
+	public void rellenarMatriz(){
+		Random num=new Random();
+		while(true){
+			colocarItems(num.nextInt(2*filas-1)-(filas-1),num.nextInt(2*columnas-1)-(columnas-1));
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				System.out.print("Error en el colocador automatico\n");
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public static void main(String[] args){
-		MatrizDinamica n= new MatrizDinamica(10,10);
-		NodoMatriz x=n.getColocador();
-		Random aleat=new Random();
-		int i=20;
-		while(i!=0){
-			n.colocarItems(aleat.nextInt(19)-9,aleat.nextInt(19)-9);
-			i--;
-		}
-		n.setColocador(x);
-		n.recorrer();
-		if(n.getColocador()==null){
-			System.out.print("nulo");
+		/*MatrizDinamica m=new MatrizDinamica(20,20);
+		NodoMatriz k=m.buscarLugar();
+		if(k==null){
+			System.out.print("Mierda");
 		}else{
-		System.out.print("no nulo");
+			System.out.print("Exito");
 		}
-	}*/
-
+		//HiloMovimiento j=new HiloMovimiento(m);
+		//HiloA h= new HiloA(m);
+		//h.start();
+		//j.start();
+		//Ventana v=new Ventana();*/
+	
+		
+	}
 }
+
 

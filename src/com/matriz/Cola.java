@@ -2,7 +2,7 @@ package com.matriz;
 import com.servidorcliente.*;
 public class Cola {
 	
-	protected NodoString head,tail;
+	protected NodoItem head,tail;
 	private int tam;
 
 	public Cola() {
@@ -10,8 +10,8 @@ public class Cola {
 		tam=0;
 	
 	}
-	public void add(String dato,int y){
-		NodoString nuevo= new NodoString(dato,y);
+	public void add(Item itm){
+		NodoItem nuevo= new NodoItem(itm);
 		if(tam==0){
 			head=tail=nuevo;
 			tam++;
@@ -22,20 +22,20 @@ public class Cola {
 		}
 	}
 	
-	public String getInfo(){
-		return head.info;
+	public Item getItem(){
+		return head.getItem();
 	}
 	
-	public int getValor(){
-		return head.valor;
-	}
-	
-	
-	public void remove(){
+	public Item remove(){
 		if(tam!=0){
+			Item itm=head.getItem();
 			head=head.next;
 			tam--;
+			return itm;
 			}
+		else{
+			return null;
+		}
 	}
 	
 	public int getTam(){

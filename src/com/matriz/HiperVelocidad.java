@@ -1,8 +1,8 @@
 package com.matriz;
 
-public class HiperVelocidad extends Escudo {
+public class HiperVelocidad extends Item{
 
 	public HiperVelocidad() {
-		super("velocidad");
+		super("velocidad",100);
 	}
 }
