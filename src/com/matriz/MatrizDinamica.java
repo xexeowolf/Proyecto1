@@ -2,11 +2,6 @@ package com.matriz;
 
 import java.util.Random;
 
-import com.servidorcliente.HiloMovimiento;
-import com.servidorcliente.Panel;
-import com.servidorcliente.Ventana;
-
-
 public class MatrizDinamica {
 	private int filas;
 	private int columnas;
@@ -32,8 +27,13 @@ public class MatrizDinamica {
 		actores=new ListaActores();
 	}
 	
+	
+//Metodos sobre la lista de imagenes que muestra la interfaz.--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	public ListaActores getListaActores(){
 		return actores;
+	}
+	public void setListaActores(ListaActores act){
+		actores=act;
 	}
 	public NodoActor agregarActor(String nombre,int x,int y,NodoActor tmp){
 		return actores.add(nombre, x, y,tmp);
@@ -44,7 +44,8 @@ public class MatrizDinamica {
 	public void quitarActor(int x,int y,String nombre){
 		actores.remove(x,y,nombre);
 	}
-	
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Metodo para buscar posiciones libre donde colocar la moto.
 	public NodoMatriz buscarLugar(){
 		if(esqSD.getEstado()==false){
 			return esqSD;
@@ -62,7 +63,8 @@ public class MatrizDinamica {
 			return null;
 		}
 	}
-	
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Metodos para mover los punteros que colocan items en los nodos de la matriz
 	public void moverColocador(String direccion,int pasos){
 		switch(direccion){
 		case "der": while(pasos!=0 && colocador.right!=null){colocador=colocador.right;pasos--;};break;
@@ -80,8 +82,8 @@ public class MatrizDinamica {
 		case "arr": while(pasos!=0 && distribuir.up!=null){distribuir=distribuir.up;pasos--;};break;
 		}
 	}
-	
-	
+	//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//Metodos para definir la direccion en que se van a mover los punteros que colocan items.
 	public String DireccionX(int x){
 		if(x>0){
 			return "der";
@@ -93,16 +95,17 @@ public class MatrizDinamica {
 	}
 	
 	public String DireccionY(int y){
-		if(y>0){
+		if(y<0){
 			return "arr";
-		}else if(y<0){
+		}else if(y>0){
 			return "abj";
 		}else{
 			return "cero";
 		}
 		
 	}
-	
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Metodos que colocan items en una posicion 'x' y 'y' definidas de manera aleatoria.
 	public void colocarItems(int x,int y){
 			moverColocador(DireccionX(x),Math.abs(x));
 			moverColocador(DireccionY(y),Math.abs(y));
@@ -114,7 +117,7 @@ public class MatrizDinamica {
 						case "combustible": actores.add("gas.gif", colocador.getPosX(), colocador.getPosY(),"item");break;
 						case "aumestela": actores.add("agregarEstela.gif", colocador.getPosX(), colocador.getPosY(),"item");break;
 						case "velocidad": actores.add("nitro.gif", colocador.getPosX(), colocador.getPosY(),"item");break;
-						case "bomba":actores.add("bicho.gif", colocador.getPosX(), colocador.getPosY(),"item");break;
+						case "bomba":actores.add("estela4.gif", colocador.getPosX(), colocador.getPosY(),"item");break;
 						case "escudo":actores.add("escudo.gif", colocador.getPosX(), colocador.getPosY(),"item");break;
 						}
 						colocador.setItem(elementos);
@@ -143,23 +146,24 @@ public class MatrizDinamica {
 				}
 				else{
 					Random num=new Random();
-					distribuirItem(num.nextInt(filas),num.nextInt(2*columnas-1)-(columnas-1),itm);
+					int [] un={-1,1};
+					distribuirItem((num.nextInt(filas - 2) % 3 + 2) * un[num.nextInt(2)] ,(num.nextInt(columnas - 2) % 3 + 2)* un[num.nextInt(2)],itm);
 				}
 				
 		}
 	}
 		
 }
-
-	
-	
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Metodo para obtener y posicionar el puntero que coloca items de manera aleatoria en la matriz		
 	public NodoMatriz getColocador(){
 		return colocador;
 	}
 	public void setColocador(NodoMatriz temp){
 		colocador=temp;
 	}
-	
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Metodo que genera una matriz de una cantidad definida de filas y colas, inicializa todos los punteros necesarios.
 	public void generarMatriz(int cantFilas, int cantCol){
 		ListasDobles primero=new ListasDobles(0,0);
 		primero.generarLista(cantCol);
@@ -188,24 +192,28 @@ public class MatrizDinamica {
 		esqII=current.head;
 		esqID=current.tail;
 	}
-	
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Metodo que distribuye los items de una moto en el mapa en caso de ser destruida.	
 	public void distribMatriz(Cola items,Pila poderes){
+		int [] un={-1,1};
 		Random num=new Random();
 		while(items.getTam()>0){
 			Item obj=items.remove();
-			distribuirItem(num.nextInt(2*filas-1)-(filas-1),num.nextInt(2*columnas-1)-(columnas-1),obj);
+			distribuirItem((num.nextInt(filas - 2) % 3 + 2) * un[num.nextInt(2)] ,(num.nextInt(columnas - 2) % 3 + 2)* un[num.nextInt(2)],obj);
 		}
 		while(poderes.getTam()>0){
 			Item pod=poderes.remove();
-			distribuirItem(num.nextInt(2*filas-1)-(filas-1),num.nextInt(2*columnas-1)-(columnas-1),pod);
+			distribuirItem((num.nextInt(filas - 2) % 3 + 2) * un[num.nextInt(2)] ,(num.nextInt(columnas - 2) % 3 + 2)* un[num.nextInt(2)],pod);
 		}
 		
 	}
-	
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
+//Metodo infinito que coloca items en la matriz.
 	public void rellenarMatriz(){
+		int [] un={-1,1};
 		Random num=new Random();
 		while(true){
-			colocarItems(num.nextInt(2*filas-1)-(filas-1),num.nextInt(2*columnas-1)-(columnas-1));
+			colocarItems((num.nextInt(filas - 2) % 3 + 2) * un[num.nextInt(2)] ,(num.nextInt(columnas - 2) % 3 + 2)* un[num.nextInt(2)]);
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
@@ -214,6 +222,8 @@ public class MatrizDinamica {
 			}
 		}
 	}
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
 	
 	public static void main(String[] args){
 		/*MatrizDinamica m=new MatrizDinamica(20,20);

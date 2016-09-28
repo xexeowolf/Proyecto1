@@ -41,6 +41,7 @@ public class ListaActores {
 	}
 	
 	public void remove(int x,int y,String nombre){
+	if(tam!=0){
 		if(head.getPosX()==x && head.getPosY()==y && head.getNombre()==nombre){
 			head=head.next;
 			tam--;
@@ -49,6 +50,9 @@ public class ListaActores {
 			NodoActor tmp=head;
 			while(tmp.next!=null){
 				if(tmp.next.getPosX()==x && tmp.next.getPosY()==y && tmp.next.getNombre()==nombre){
+					if(tmp.next==tail){
+						tail=tmp;
+					}
 					tmp.next=tmp.next.next;
 					tam--;
 					break;
@@ -57,6 +61,7 @@ public class ListaActores {
 			}
 		}
 	}
+}
 	
 	public int getTam(){
 		return tam;

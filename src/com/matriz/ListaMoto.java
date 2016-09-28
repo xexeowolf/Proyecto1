@@ -6,10 +6,11 @@ public class ListaMoto {
 	private NodoActor imagen;
 	private int tam;
 	private int ID;
-	private int alto;
-	private int ancho;
+	private boolean vivo;
 	private String escudo;
 	private MatrizDinamica matriz;
+	public HiloMovMoto hilo;
+	
 
 	
 	public ListaMoto(int id,String nombre,MatrizDinamica m) {
@@ -28,7 +29,7 @@ public class ListaMoto {
 			add();
 			k--;
 		}
-		
+		vivo=true;
 	}
 	
 	public NodoMoto getHead(){
@@ -49,6 +50,16 @@ public class ListaMoto {
 		if(head.getEstela()>tam){
 			add();
 		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void precaucion(){
+		hilo.stop();
+		if(head.abajo!=null){
+			hilo.resume();
+			enlazar();
+		}
+		hilo.resume();
 	}
 	
 	public void enlazar(){
@@ -130,6 +141,10 @@ public class ListaMoto {
 			};
 			verificar();}break;
 		}
+		head.reduceGas();
+		if(head.getGas()==0.0){
+			destruirMoto();
+		}
 	}
 		
 	public void verificar() {
@@ -163,6 +178,7 @@ public class ListaMoto {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void destruirMoto()
 	{
 		NodoActor puntero=imagen;
@@ -179,6 +195,11 @@ public class ListaMoto {
 			tm=tm.sig;
 		}
 		head=tail=null;
+		vivo=false;
+	}
+	
+	public boolean getVivo(){
+		return vivo;
 	}
 	
 	public void aplicarItem(){
@@ -186,7 +207,7 @@ public class ListaMoto {
 			if(head.getItems().getTam()>0){
 				switch(head.getItems().getItem().getNombre()){
 				case "combustible":head.aumGas(head.getItems().remove().getValor());break;
-				case "aumestela":head.setEstela(head.getItems().remove().getValor());break;
+				case "aumestela":head.setEstela(head.getItems().remove().getValor());aumentarLista();break;
 				}
 			}
 		}
@@ -201,9 +222,7 @@ public class ListaMoto {
 	}
 	
 	public void moverse(){
-		while(true){
-			enlazar();
-		}
+			precaucion();
 	}
 
 	

@@ -12,6 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Random;
 
 
 import javax.swing.JButton;
@@ -131,7 +132,12 @@ public class Cliente implements KeyListener,Runnable,ActionListener{
 	}
 	
 	public static void main(String[] args){
-		new Cliente();
+		Random j=new Random();
+		int i=0;
+		while(i<500){
+			System.out.print((j.nextInt(4)+1)+"\n");
+			i++;
+		}
 		
 		
 	}

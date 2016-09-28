@@ -5,7 +5,7 @@ import com.servidorcliente.Actor;
 public class NodoMoto {
 	
 	private int estela;
-	private int combustible;
+	private double combustible;
 	private int velocidad;
 	private String direccion;
 	private Pila poderes;
@@ -18,7 +18,7 @@ public class NodoMoto {
 	public NodoMoto(){
 		estela=3;
 		velocidad=300;
-		combustible=100;
+		combustible=100.0;
 		poderes=new Pila();
 		items=new Cola();
 		abajo=null;
@@ -53,7 +53,11 @@ public class NodoMoto {
 	}
 	
 	public void reduceGas(){
-		combustible--;
+		combustible=combustible-0.2;
+	}
+	
+	public double getGas(){
+		return combustible;
 	}
 	
 	public int getEstela(){
@@ -72,10 +76,10 @@ public class NodoMoto {
 	public String getDireccion(){
 		return direccion;
 	}
-	public void aumGas(int g){
+	public void aumGas(double g){
 		combustible=combustible+g;
-		if(combustible>100){
-			combustible=100;
+		if(combustible>100.0){
+			combustible=100.0;
 		}
 	}
 	

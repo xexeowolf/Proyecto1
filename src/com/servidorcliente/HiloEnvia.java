@@ -9,14 +9,13 @@ public class HiloEnvia extends Thread {
 	
 	int puertosalida;
 	String IP;
-	Servidor servidor;
+	ServidorVentana servidor;
 	int numJugador;
 	
-	public HiloEnvia(String ip,int ps,Servidor serv,int num) {
+	public HiloEnvia(String ip,int ps,int num) {
 		puertosalida=ps;
 		IP=ip;
 		numJugador=num;
-		servidor=serv;
 	}
 
 	

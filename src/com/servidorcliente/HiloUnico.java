@@ -9,13 +9,12 @@ import org.json.JSONObject;
 public class HiloUnico extends Thread {
 
 	private int puertoentrada;
-	private Servidor servidor;
-	private int val;
+	private ServidorVentana servidor;
 	private String ip;
 	private int pe;
 	private int ps;
 	
-	public HiloUnico(int p,Servidor servid) {
+	public HiloUnico(int p,ServidorVentana servid) {
 		puertoentrada=p;
 		servidor=servid;
 	}
@@ -29,24 +28,19 @@ public class HiloUnico extends Thread {
 				ObjectInputStream flujo = new ObjectInputStream(cli.getInputStream());
 				JSONObject recibido=new JSONObject();
 				recibido=(JSONObject)flujo.readObject();
-				val=Integer.parseInt(recibido.getString("conexion"));
 				ip=(String)recibido.getString("IP");
 				pe=Integer.parseInt(recibido.getString("PE"));
 				ps=Integer.parseInt(recibido.getString("PS"));
-				if(val==1){
-					servidor.setCliente(ip, pe, ps, servidor);
-				}
-				else{
-					System.out.print("No conecto");
-				}
+				servidor.agregarCliente(ip, pe, ps, 1,servidor);
+				cli.close();
 			}
 		} catch(Exception g){System.out.print("Error al recibir en el hilo principal");g.printStackTrace();}
 	}
 	
 	public static void main(String[] args){
-		Servidor n=new Servidor();
-		HiloUnico h= new HiloUnico(9095,n);
-		h.start();
+		//Servidor n=new Servidor();
+		//HiloUnico h= new HiloUnico(9095,n);
+		//h.start();
 	}
 }
 
