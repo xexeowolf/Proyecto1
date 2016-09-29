@@ -11,6 +11,7 @@ public class ListaMoto {
 	private MatrizDinamica matriz;
 	public HiloMovMoto hilo;
 	
+	
 
 	
 	public ListaMoto(int id,String nombre,MatrizDinamica m) {
@@ -21,7 +22,7 @@ public class ListaMoto {
 		while(nuevo.abajo==null){
 			nuevo.abajo=m.buscarLugar();
 		}
-		imagen=m.agregarActor(nombre, 0, 0,imagen);
+		imagen=m.agregarActor(nombre, -50, -50,imagen);
 		head=tail=nuevo;
 		tam=0;
 		int k=3;
@@ -39,7 +40,7 @@ public class ListaMoto {
 	public void add(){
 		NodoMoto est=new NodoMoto(true);
 		NodoActor tmp=null;
-		tmp=matriz.agregarActor("estela"+Integer.toString(ID)+".gif",0,0,tmp);
+		tmp=matriz.agregarActor("estela"+Integer.toString(ID)+".gif",-50,-50,tmp);
 		tail.sig=est;
 		tail.sig.ant=tail;
 		tail=est;
@@ -50,16 +51,6 @@ public class ListaMoto {
 		if(head.getEstela()>tam){
 			add();
 		}
-	}
-	
-	@SuppressWarnings("deprecation")
-	public void precaucion(){
-		hilo.stop();
-		if(head.abajo!=null){
-			hilo.resume();
-			enlazar();
-		}
-		hilo.resume();
 	}
 	
 	public void enlazar(){
@@ -141,10 +132,10 @@ public class ListaMoto {
 			};
 			verificar();}break;
 		}
-		head.reduceGas();
-		if(head.getGas()==0.0){
+		//head.reduceGas();
+		/*if(head.getGas()==0.0){
 			destruirMoto();
-		}
+		}*/
 	}
 		
 	public void verificar() {
@@ -178,23 +169,32 @@ public class ListaMoto {
 		
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void destruirMoto()
 	{
-		NodoActor puntero=imagen;
+		/*NodoActor puntero=imagen;
 		while(puntero!=null){
 			matriz.quitarActor(puntero);
 			puntero=puntero.next;
 		}
 		matriz.quitarActor(imagen);
-		matriz.distribMatriz(head.getItems(), head.getPoderes());
+		
 		NodoMoto tm=head;
 		while(tm!=null){
 			tm.abajo.setEstado(false, "");
 			tm.abajo=null;
 			tm=tm.sig;
 		}
-		head=tail=null;
+		head=tail=null;*/
+		matriz.getListaActores().imprimir();
+		matriz.distribMatriz(head.getItems(), head.getPoderes());
+		int ye=matriz.getListaActores().getTam();
+		matriz.quitarMoto("estela1.gif");
+		if(matriz.getListaActores().getTam()==ye){
+			System.out.print("Mierda");
+		}
+		//matriz.quitarMoto("moto.gif");
+		System.out.print("\n\n\n");
+		matriz.getListaActores().imprimir();
 		vivo=false;
 	}
 	
@@ -221,8 +221,29 @@ public class ListaMoto {
 		}
 	}
 	
+	
+	public void dead(){
+		
+		
+		while(tail!=head){
+			tail.abajo.setEstado(false, "");
+			tail.abajo=head.abajo;
+			tail=tail.ant;
+		}
+		imagen.setImagen("vacio.gif");
+		head.abajo.setEstado(false, "");
+		head.abajo=matriz.esqSI;
+	}
+	
+	
 	public void moverse(){
-			precaucion();
+		if(vivo==false){
+			dead();
+		}
+		else{
+			enlazar();	
+		}
+		
 	}
 
 	

@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import com.matriz.HiloMovMoto;
 import com.matriz.ListaMoto;
+import com.matriz.NodoActor;
 
 public class ServidorVentana extends Thread {
 	
@@ -23,6 +24,7 @@ public class ServidorVentana extends Thread {
 	
 	private HiloMovMoto hiloM;
 	private HiloColocador hiloC;
+	private HiloItem hiloI;
 	
 	
 	public ServidorVentana() {
@@ -36,15 +38,18 @@ public class ServidorVentana extends Thread {
 	public void agregarJugador(String nombre,String ip,int ps,int id){
 		ListaMoto nuevo=new ListaMoto(id,nombre,pantalla.matriz);
 		hiloM=new HiloMovMoto(nuevo);
-		hiloC=new HiloColocador(pantalla.matriz);
+		hiloI=new HiloItem(nuevo);
 		nuevo.hilo=hiloM;
 		jugadores.agregar(nuevo,ip,ps);
 		hiloM.start();
-		hiloC.start();
+		hiloI.start();
+		
 	}
 	
 	public void buscarConexion(String ip,int ps){
 		if(conexion1==true){
+			hiloC=new HiloColocador(pantalla.matriz);
+			hiloC.start();
 			agregarJugador("moto.gif",ip,ps,1);
 			conexion1=false;
 		}
@@ -68,23 +73,33 @@ public class ServidorVentana extends Thread {
 	public void distribuirInfo(){
 		NodoJugador tmp=jugadores.head;
 		while(tmp!=null){
-			//enviar(tmp.getIP(),tmp.getPuerto());
+			enviar(tmp.getIP(),tmp.getPuerto());
 			tmp=tmp.next;
 		}
 		
 	}
 	
-	public void enviar(String ip,int ps) {//Falta definir que se va a enviar, y si es en string o un objeto.
+	public void enviar(String ip,int ps) {
 		try{
-			Socket cli= new Socket(ip,ps);
+			Socket cli= new Socket("192.168.1.62",9090);
 			JSONObject medio= new JSONObject();
-			medio.put("imagenes",pantalla.matriz.getListaActores());
+			NodoActor n=new NodoActor("moto.gif",10,10);
+			//medio.put("imagenes",pantalla.matriz.getListaActores());
+			medio.put("imagenes", n);
 			ObjectOutputStream flujo= new ObjectOutputStream(cli.getOutputStream());
 			flujo.writeObject(medio);
 			cli.close();
 		} catch(Exception ex){System.out.print("Error al enviar actualizacion en el servidor\n");ex.printStackTrace();}
 	}
 	
+	
+	public void imprimir(){
+		NodoJugador l=jugadores.head;
+		while(l!=null){
+			System.out.print(l.getIP()+"/n"+l.getPuerto());
+			l=l.next;
+		}
+	}
 	public void run(){
 		try{
 			ServerSocket serv=new ServerSocket(9095);
@@ -105,6 +120,7 @@ public class ServidorVentana extends Thread {
 					tmp.getPlayer().getHead().setDireccion(direccion);
 					
 				}
+					imprimir();
 					distribuirInfo();
 				
 				cli.close();

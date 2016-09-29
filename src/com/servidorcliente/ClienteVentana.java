@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 import org.json.JSONObject;
 
 import com.matriz.ListaActores;
+import com.matriz.NodoActor;
 
 public class ClienteVentana extends Thread implements ActionListener,KeyListener {
 
@@ -32,7 +33,7 @@ public class ClienteVentana extends Thread implements ActionListener,KeyListener
 	
 	public ClienteVentana() {
 		ventana=new JFrame("Bienvenido");
-		ventana.setBounds(0,0,600,150);
+		ventana.setBounds(0,0,600,175);
 		label1=new JLabel("Ingrese un nombre: ");
 		label1.setBounds(10,30,200,20);
 		label2=new JLabel("Ingrese la direccion IP: ");
@@ -50,6 +51,7 @@ public class ClienteVentana extends Thread implements ActionListener,KeyListener
 		btn.addActionListener(this);
 		ventana.setVisible(true);
 		ventana.setLayout(null);
+		ventana.setResizable(false);
 		validacion=1;
 		ventana.add(label1);
 		ventana.add(label2);
@@ -114,15 +116,16 @@ public class ClienteVentana extends Thread implements ActionListener,KeyListener
 	
 	public void run(){
 		try{
-			ServerSocket serv=new ServerSocket(PuertoV);
+			ServerSocket serv=new ServerSocket(9090);//PuertoV
 			Socket cli;
 			while(true){
 				cli=serv.accept();
 				ObjectInputStream flujo = new ObjectInputStream(cli.getInputStream());
 				JSONObject recibido=new JSONObject();
 				recibido=(JSONObject)flujo.readObject();
-				pantalla.matriz.setListaActores((ListaActores)recibido.get("imagenes"));
-				pantalla.panel.repaint();
+				//pantalla.matriz.setListaActores((ListaActores)recibido.get("imagenes"));
+				NodoActor lol=((NodoActor)recibido.get("imagenes"));
+				//pantalla.panel.repaint();
 				cli.close();
 			}
 		} catch(Exception g){System.out.print("Error al recibir en el hilo principal");g.printStackTrace();}

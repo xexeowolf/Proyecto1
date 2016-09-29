@@ -1,26 +1,36 @@
 package com.matriz;
 
 import java.awt.Image;
+import java.io.Serializable;
 
 import javax.swing.ImageIcon;
 
-public class NodoActor {
+public class NodoActor implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Image imagen;
 	private int posX;
 	private int posY;
 	public NodoActor next;
+	public NodoActor prev;
 	private String nombre;
+	private String nomImagen;
 	
 	
 	public NodoActor(String direccion,int x,int y) {
 		imagen=new ImageIcon(getClass().getClassLoader().getResource("Imagenes/"+direccion)).getImage();
 		posX=x;
 		posY=y;
-		next=null;
+		next=prev=null;
+		nomImagen=direccion;
 	}
 	
-	
+	public String getNomImagen(){
+		return nomImagen;
+	}
 	
 	public int getPosX(){
 		return posX;

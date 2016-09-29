@@ -9,7 +9,7 @@ public class MatrizDinamica {
 	private NodoMatriz distribuir;
 	private Fabrica factory;
 	private NodoMatriz esqSD;
-	private NodoMatriz esqSI;
+	public NodoMatriz esqSI;
 	private NodoMatriz esqII;
 	private NodoMatriz esqID;
 	private ListaActores actores;
@@ -37,6 +37,9 @@ public class MatrizDinamica {
 	}
 	public NodoActor agregarActor(String nombre,int x,int y,NodoActor tmp){
 		return actores.add(nombre, x, y,tmp);
+	}
+	public void quitarMoto(String nom){
+		actores.eliminarMoto(nom);
 	}
 	public void quitarActor(NodoActor tmp){
 		actores.remove(tmp.getPosX(), tmp.getPosY(),tmp.getNombre());

@@ -1,7 +1,5 @@
 package com.matriz;
 
-import com.servidorcliente.Actor;
-
 public class NodoMoto {
 	
 	private int estela;

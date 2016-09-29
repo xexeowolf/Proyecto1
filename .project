@@ -46,6 +46,11 @@
 			<location>/home/alfredo/Documentos/Imágenes/imagtron16/estela2.gif</location>
 		</link>
 		<link>
+			<name>src/Imagenes/estela3.gif</name>
+			<type>1</type>
+			<location>/home/alfredo/Documentos/Imágenes/imagtron16/estela3.gif</location>
+		</link>
+		<link>
 			<name>src/Imagenes/estela4.gif</name>
 			<type>1</type>
 			<location>/home/alfredo/Documentos/Imágenes/imagtron16/estela4.gif</location>
@@ -69,6 +74,11 @@
 			<name>src/Imagenes/nitro.gif</name>
 			<type>1</type>
 			<location>/home/alfredo/Documentos/Imágenes/imagtron16/nitro.gif</location>
+		</link>
+		<link>
+			<name>src/Imagenes/vacio.gif</name>
+			<type>1</type>
+			<location>/home/alfredo/vacio.gif</location>
 		</link>
 	</linkedResources>
 </projectDescription>
