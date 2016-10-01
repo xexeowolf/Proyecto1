@@ -15,36 +15,31 @@ public class SubVentana extends JFrame{
 	
 	public SubVentana() {
 		actores=new ListaActores();
-		actores.add("moto.gif", 30, 30, "");
-		actores.add("moto.gif", 130, 30, "");
-		actores.add("moto.gif", 230, 30, "");
-		actores.add("moto.gif", 30, 330, "");
-		actores.add("moto.gif", 30, 230, "");
 		panel=new Panel(actores);
 		add(panel);
 		setTitle("Cliente");
 		setSize(700,700);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
-		setVisible(true);
+		setVisible(false);
 		setResizable(false);
 	}
 	
 	public void setImagenes(ListaActores lista){
-		actores=lista;
+		panel.actores=lista;
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
-				new SubVentana();
+				SubVentana l=new SubVentana();
 				
 			
 			}
 		});
-	}
+	}*/
 
 	
 	

@@ -23,15 +23,18 @@ import com.matriz.NodoActor;
 
 public class ClienteVentana extends Thread implements ActionListener,KeyListener {
 
-	private Ventana pantalla;
+	private SubVentana pantalla;
 	private JFrame ventana;
 	private JLabel label1,label2,label3;
 	private JTextField ip,nick,puerto;
 	private JButton btn;
-	private int validacion;
 	private int PuertoV;
+	int x;
 	
 	public ClienteVentana() {
+		x=0;
+		pantalla=new SubVentana();
+		pantalla.addKeyListener(this);
 		ventana=new JFrame("Bienvenido");
 		ventana.setBounds(0,0,600,175);
 		label1=new JLabel("Ingrese un nombre: ");
@@ -52,7 +55,6 @@ public class ClienteVentana extends Thread implements ActionListener,KeyListener
 		ventana.setVisible(true);
 		ventana.setLayout(null);
 		ventana.setResizable(false);
-		validacion=1;
 		ventana.add(label1);
 		ventana.add(label2);
 		ventana.add(label3);
@@ -60,8 +62,17 @@ public class ClienteVentana extends Thread implements ActionListener,KeyListener
 		ventana.add(nick);
 		ventana.add(puerto);
 		ventana.add(btn);
-		ventana.addWindowListener(new WindowAdapter(){
+		pantalla.addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent ep){
+				try{
+					Socket cli= new Socket("192.168.1.62",9095);
+					JSONObject medio= new JSONObject();
+					medio.put("val",2);
+					medio.put("puerto",PuertoV);
+					ObjectOutputStream flujo= new ObjectOutputStream(cli.getOutputStream());
+					flujo.writeObject(medio);
+					cli.close();
+				} catch(Exception ex){System.out.print("Error al enviar actualizacion en el cliente\n");ex.printStackTrace();}
 				System.exit(0);
 			}
 		});
@@ -71,11 +82,10 @@ public class ClienteVentana extends Thread implements ActionListener,KeyListener
 		try{
 			Socket cli= new Socket("192.168.1.62",9095);
 			JSONObject medio= new JSONObject();
-			medio.put("puerto", puerto.getText());
-			medio.put("val",Integer.toString(validacion));
-			medio.put("IP",ip.getText());
 			PuertoV=Integer.parseInt(puerto.getText());
-			validacion=5;
+			medio.put("puerto", PuertoV);
+			medio.put("val",1);
+			medio.put("IP",ip.getText());
 			ObjectOutputStream flujo= new ObjectOutputStream(cli.getOutputStream());
 			flujo.writeObject(medio);
 			cli.close();
@@ -86,9 +96,9 @@ public class ClienteVentana extends Thread implements ActionListener,KeyListener
 		try{
 			Socket cli= new Socket("192.168.1.62",9095);
 			JSONObject medio= new JSONObject();
-			medio.put("val",Integer.toString(validacion));
+			medio.put("val",5);
 			medio.put("direccion", dir);
-			medio.put("puerto",Integer.toString(PuertoV));
+			medio.put("puerto",PuertoV);
 			ObjectOutputStream flujo= new ObjectOutputStream(cli.getOutputStream());
 			flujo.writeObject(medio);
 			cli.close();
@@ -100,8 +110,9 @@ public class ClienteVentana extends Thread implements ActionListener,KeyListener
 	public void actionPerformed(ActionEvent arg0) {
 		setConexion();
 		ventana.setVisible(false);
-		pantalla=new Ventana();
-		pantalla.addKeyListener(this);
+		pantalla.setVisible(true);
+		
+
 	}
 
 	@Override
@@ -116,16 +127,20 @@ public class ClienteVentana extends Thread implements ActionListener,KeyListener
 	
 	public void run(){
 		try{
-			ServerSocket serv=new ServerSocket(9090);//PuertoV
+			ServerSocket serv=new ServerSocket(9096);//PuertoV
 			Socket cli;
 			while(true){
 				cli=serv.accept();
 				ObjectInputStream flujo = new ObjectInputStream(cli.getInputStream());
 				JSONObject recibido=new JSONObject();
 				recibido=(JSONObject)flujo.readObject();
-				//pantalla.matriz.setListaActores((ListaActores)recibido.get("imagenes"));
-				NodoActor lol=((NodoActor)recibido.get("imagenes"));
-				//pantalla.panel.repaint();
+				int cont=recibido.getInt("Cantidad");
+				ListaActores nueva=new ListaActores();
+				while(cont!=0){
+					nueva.add(recibido.getString("Imagen"+Integer.toString(cont)),recibido.getInt("PosX"+Integer.toString(cont)),recibido.getInt("PosY"+Integer.toString(cont)) ,"");
+					cont--;
+				}
+				pantalla.setImagenes(nueva);
 				cli.close();
 			}
 		} catch(Exception g){System.out.print("Error al recibir en el hilo principal");g.printStackTrace();}

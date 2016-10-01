@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 import javax.swing.ImageIcon;
 
-public class NodoActor implements Serializable {
+public class NodoActor {
 
 	/**
 	 * 

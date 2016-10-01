@@ -27,14 +27,14 @@ public class Jugadores {
 		}
 		
 	}
-	public void eliminar(String ip){
-		if(head.getIP()==ip){
+	public void eliminar(int ps){
+		if(head.getPuerto()==ps){
 			head=head.next;
 		}
 		else{
 			NodoJugador tmp=head;
 			while(tmp.next!=null){
-				if(tmp.next.getIP()==ip){
+				if(tmp.next.getPuerto()==ps){
 					if(tmp.next==tail){
 						tail=tmp;
 					}

@@ -51,17 +51,5 @@ public class Panel  extends JPanel {
 		actores=act;
 	}
 	
-	public static void main(String[] args) {
-	}
-	/*public void cargarImagenes(){
-	foto=new ImageIcon(getClass().getClassLoader().getResource("Imagenes/moto1abjEscu.gif")).getImage();
-	foto2=new ImageIcon(getClass().getClassLoader().getResource("Imagenes/moto1abjEscu.gif")).getImage();
-	if(foto==null){
-		System.out.print("es nulo");
-	}
-	else{
-		System.out.print("carga completa");
-	}
-}*/
 
 }

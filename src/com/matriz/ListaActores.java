@@ -21,7 +21,7 @@ public class ListaActores {
 				tam--;
 			}
 			else{
-				System.out.print("\n"+nom+"\n"+head.getNomImagen()+"\n-------\n");
+				//System.out.print("\n"+nom+"\n"+head.getNomImagen()+"\n-------\n");
 				break;
 			}
 		}
@@ -38,7 +38,7 @@ public class ListaActores {
 					eliminarMoto(nom);
 				}
 				else{
-					System.out.print("\n"+nom+"\n"+tmp.getNomImagen()+"\n-------\n");
+					//System.out.print("\n"+nom+"\n"+tmp.getNomImagen()+"\n-------\n");
 					tmp=tmp.next;
 				}
 			}

@@ -14,7 +14,7 @@ import com.matriz.NodoActor;
 public class ServidorVentana extends Thread {
 	
 	private Ventana pantalla;
-	private Jugadores jugadores;
+	public Jugadores jugadores;
 	
 	private boolean conexion1;
 	private boolean conexion2;
@@ -25,6 +25,8 @@ public class ServidorVentana extends Thread {
 	private HiloMovMoto hiloM;
 	private HiloColocador hiloC;
 	private HiloItem hiloI;
+	
+	public HiloEnvia hiloE;
 	
 	
 	public ServidorVentana() {
@@ -37,12 +39,12 @@ public class ServidorVentana extends Thread {
 	
 	public void agregarJugador(String nombre,String ip,int ps,int id){
 		ListaMoto nuevo=new ListaMoto(id,nombre,pantalla.matriz);
+		jugadores.agregar(nuevo,ip,ps);
 		hiloM=new HiloMovMoto(nuevo);
 		hiloI=new HiloItem(nuevo);
 		nuevo.hilo=hiloM;
-		jugadores.agregar(nuevo,ip,ps);
 		hiloM.start();
-		hiloI.start();
+		//hiloI.start();
 		
 	}
 	
@@ -81,11 +83,18 @@ public class ServidorVentana extends Thread {
 	
 	public void enviar(String ip,int ps) {
 		try{
-			Socket cli= new Socket("192.168.1.62",9090);
+			Socket cli= new Socket(ip,ps);
 			JSONObject medio= new JSONObject();
-			NodoActor n=new NodoActor("moto.gif",10,10);
-			//medio.put("imagenes",pantalla.matriz.getListaActores());
-			medio.put("imagenes", n);
+			int tam=pantalla.matriz.getListaActores().getTam();
+			medio.put("Cantidad", tam);
+			NodoActor tmp=pantalla.matriz.getListaActores().getHead();
+			while(tam!=0 && tmp!=null){
+				medio.put("Imagen"+Integer.toString(tam),tmp.getNomImagen());
+				medio.put("PosX"+Integer.toString(tam),tmp.getPosX());
+				medio.put("PosY"+Integer.toString(tam),tmp.getPosY());
+				tam--;
+				tmp=tmp.next;
+			}
 			ObjectOutputStream flujo= new ObjectOutputStream(cli.getOutputStream());
 			flujo.writeObject(medio);
 			cli.close();
@@ -100,6 +109,7 @@ public class ServidorVentana extends Thread {
 			l=l.next;
 		}
 	}
+	@SuppressWarnings("deprecation")
 	public void run(){
 		try{
 			ServerSocket serv=new ServerSocket(9095);
@@ -109,20 +119,21 @@ public class ServidorVentana extends Thread {
 				ObjectInputStream flujo = new ObjectInputStream(cli.getInputStream());
 				JSONObject recibido=new JSONObject();
 				recibido=(JSONObject)flujo.readObject();
-				int validacion=Integer.parseInt(recibido.getString("val"));
+				int validacion=recibido.getInt("val");
 				if(validacion==1){
-					buscarConexion(recibido.getString("IP"),Integer.parseInt(recibido.getString("puerto")));
+					buscarConexion(recibido.getString("IP"),recibido.getInt("puerto"));
+					hiloE.start();
 					}
-				else{
-					String direccion=recibido.getString("direccion");
-					int pto=Integer.parseInt(recibido.getString("puerto"));
-					NodoJugador tmp=jugadores.buscar(pto);
-					tmp.getPlayer().getHead().setDireccion(direccion);
+				else if(validacion==2){
+					jugadores.eliminar(recibido.getInt("puerto"));
+					hiloE.stop();
 					
 				}
-					imprimir();
-					distribuirInfo();
-				
+				else{
+					NodoJugador tmp=jugadores.buscar(recibido.getInt("puerto"));
+					tmp.getPlayer().getHead().setDireccion(recibido.getString("direccion"));
+					
+				}
 				cli.close();
 			}
 		} catch(Exception g){System.out.print("Error al recibir en el hilo principal");g.printStackTrace();}
@@ -131,7 +142,10 @@ public class ServidorVentana extends Thread {
 	
 	public static void main(String[] args) {
 			ServidorVentana s=new ServidorVentana();
+			HiloEnvia n=new HiloEnvia(s);
+			s.hiloE=n;
 			s.start();
+			
 	}
 
 }
