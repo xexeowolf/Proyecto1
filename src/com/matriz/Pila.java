@@ -62,5 +62,11 @@ public class Pila {
 	public int getTam(){
 		return tam;
 	}
-	
+	public void imprimir(){
+		NodoItem tmp=top;
+		while(tmp!=null){
+			System.out.print(tmp.getItem().getNombre()+"\n");
+			tmp=tmp.next;
+		}
+	}
 }

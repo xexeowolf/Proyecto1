@@ -143,7 +143,8 @@ public class ServidorVentana extends Thread {
 				}
 				else{
 					NodoJugador tmp=jugadores.buscar(recibido.getInt("puerto"));
-					tmp.getPlayer().getHead().setDireccion(recibido.getString("direccion"));
+					if(tmp!=null){
+					tmp.getPlayer().getHead().setDireccion(recibido.getString("direccion"));}
 					
 				}
 				cli.close();

@@ -268,14 +268,12 @@ public class ListaMoto {
 		if(head!=null && head.getPoderes().getTam()!=0){
 			Item pod=head.getPoderes().remove();
 			switch(pod.getNombre()){
-			case "escudo": escudo="activo";refEscudo=matriz.agregarActor("escudoMoto.gif", imagen.getPosX(), imagen.getPosY());System.out.print("Tiene escudo");break;
+			case "escudo": escudo="activo";refEscudo=matriz.agregarActor("escudoMoto.gif", imagen.getPosX(), imagen.getPosY());break;
 			case "velocidad":head.setVel(pod.getValor());break;
 			}	
 		}
 		
 	}
-	
-	
 	
 	public void moverse(){
 		if(vivo==true){

@@ -79,11 +79,13 @@ public class ClienteVentana extends Thread implements KeyListener {
 						medio.put("val",3);
 						medio.put("puerto",PuertoV);
 						String poder=(String)pantalla.listapoderes.getSelectedItem();
-						if(poder=="escudo"){
+						if(poder=="Escudo"){
 							medio.put("poder", 1);
+							System.out.print("entro a escudo");
 						}
 						else{
 							medio.put("poder", 2);
+							System.out.print("entro a vel");
 						}
 						ObjectOutputStream flujo= new ObjectOutputStream(cli.getOutputStream());
 						flujo.writeObject(medio);
