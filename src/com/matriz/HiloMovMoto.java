@@ -12,13 +12,8 @@ public class HiloMovMoto extends Thread {
 	}
 	
 	public void run(){
-		while(moto.getVivo()){
-			if(moto.getVivo()==false){
-				break;	
-				
-			}else{
-				moto.moverse();
-			}
+		while(true){
+			moto.moverse();
 		}
 	}
 	

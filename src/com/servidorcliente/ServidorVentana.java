@@ -1,15 +1,19 @@
 package com.servidorcliente;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import javax.swing.Timer;
+
+
 import org.json.JSONObject;
 
 import com.matriz.HiloMovMoto;
 import com.matriz.ListaMoto;
-import com.matriz.NodoActor;
 
 public class ServidorVentana extends Thread {
 	
@@ -24,10 +28,18 @@ public class ServidorVentana extends Thread {
 	
 	private HiloMovMoto hiloM;
 	private HiloColocador hiloC;
-	private HiloItem hiloI;
 	
 	public HiloEnvia hiloE;
 	
+	Timer t1=new Timer(1000, new ActionListener(){
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			jugadores.head.getPlayer().aplicarItem();
+			
+		}
+		
+	});
 	
 	public ServidorVentana() {
 		pantalla=new Ventana();
@@ -41,10 +53,8 @@ public class ServidorVentana extends Thread {
 		ListaMoto nuevo=new ListaMoto(id,nombre,pantalla.matriz);
 		jugadores.agregar(nuevo,ip,ps);
 		hiloM=new HiloMovMoto(nuevo);
-		hiloI=new HiloItem(nuevo);
 		nuevo.hilo=hiloM;
 		hiloM.start();
-		//hiloI.start();
 		
 	}
 	
@@ -52,18 +62,19 @@ public class ServidorVentana extends Thread {
 		if(conexion1==true){
 			hiloC=new HiloColocador(pantalla.matriz);
 			hiloC.start();
-			agregarJugador("moto.gif",ip,ps,1);
+			agregarJugador("moto1abj.gif",ip,ps,1);
 			conexion1=false;
+			t1.start();
 		}
 		else if(conexion2==true){
-			agregarJugador("moto.gif",ip,ps,2);
+			agregarJugador("moto2abj.gif",ip,ps,2);
 			conexion2=false;
 		}
 		else if(conexion3==true){
-			agregarJugador("moto.gif",ip,ps,3);
+			agregarJugador("moto3abj.gif",ip,ps,3);
 			conexion3=false;
 		}else if(conexion4==true){
-			agregarJugador("moto.gif",ip,ps,4);
+			agregarJugador("moto4abj.gif",ip,ps,4);
 			conexion4=false;
 		}
 		else{
@@ -71,29 +82,18 @@ public class ServidorVentana extends Thread {
 		}
 	}
 	
-	
-	public void distribuirInfo(){
-		NodoJugador tmp=jugadores.head;
-		while(tmp!=null){
-			enviar(tmp.getIP(),tmp.getPuerto());
-			tmp=tmp.next;
-		}
-		
-	}
-	
-	public void enviar(String ip,int ps) {
+	public void enviar(String ip,int ps,ListaMoto jug) {
 		try{
 			Socket cli= new Socket(ip,ps);
 			JSONObject medio= new JSONObject();
-			int tam=pantalla.matriz.getListaActores().getTam();
-			medio.put("Cantidad", tam);
-			NodoActor tmp=pantalla.matriz.getListaActores().getHead();
-			while(tam!=0 && tmp!=null){
-				medio.put("Imagen"+Integer.toString(tam),tmp.getNomImagen());
-				medio.put("PosX"+Integer.toString(tam),tmp.getPosX());
-				medio.put("PosY"+Integer.toString(tam),tmp.getPosY());
-				tam--;
-				tmp=tmp.next;
+			medio.put("lista", pantalla.matriz.getListaActores());
+			if(jug!=null && jug.getHead()!=null){
+			medio.put("gas",(int)jug.getHead().getGas());
+			medio.put("escudo", jug.getHead().getPoderes().inventario("escudo"));
+			medio.put("veloc", jug.getHead().getPoderes().inventario("velocidad"));
+			medio.put("val", true);}
+			else{
+				medio.put("val", false);
 			}
 			ObjectOutputStream flujo= new ObjectOutputStream(cli.getOutputStream());
 			flujo.writeObject(medio);
@@ -125,9 +125,21 @@ public class ServidorVentana extends Thread {
 					hiloE.start();
 					}
 				else if(validacion==2){
-					jugadores.eliminar(recibido.getInt("puerto"));
 					hiloE.stop();
-					
+					t1.stop();
+					jugadores.eliminar(recibido.getInt("puerto"));
+				}
+				
+				else if(validacion==3){
+					NodoJugador jug=jugadores.buscar(recibido.getInt("puerto"));
+					if(jug!=null){
+						if(recibido.getInt("poder")==1){
+							jug.getPlayer().getHead().getPoderes().ubicar("escudo");
+						}
+						else{
+							jug.getPlayer().getHead().getPoderes().ubicar("velocidad");
+						}
+					jug.getPlayer().aplicarPoder();}
 				}
 				else{
 					NodoJugador tmp=jugadores.buscar(recibido.getInt("puerto"));
@@ -136,7 +148,7 @@ public class ServidorVentana extends Thread {
 				}
 				cli.close();
 			}
-		} catch(Exception g){System.out.print("Error al recibir en el hilo principal");g.printStackTrace();}
+		} catch(Exception g){System.out.print("Error al recibir en el hilo principal del servidor");g.printStackTrace();}
 	}
 
 	

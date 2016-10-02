@@ -3,7 +3,9 @@ package com.matriz;
 public class ListaMoto {
 	private NodoMoto head;
 	private NodoMoto tail;
+	private NodoActor refEscudo;
 	private NodoActor imagen;
+	private NodoActor contraimagen;
 	private int tam;
 	private int ID;
 	private boolean vivo;
@@ -22,7 +24,8 @@ public class ListaMoto {
 		while(nuevo.abajo==null){
 			nuevo.abajo=m.buscarLugar();
 		}
-		imagen=m.agregarActor(nombre, -50, -50,imagen);
+		imagen=matriz.agregarActor(nombre, -50, -50);
+		contraimagen=imagen;
 		head=tail=nuevo;
 		tam=0;
 		int k=3;
@@ -37,10 +40,12 @@ public class ListaMoto {
 		return head;
 	}
 	
+	
 	public void add(){
 		NodoMoto est=new NodoMoto(true);
-		NodoActor tmp=null;
-		tmp=matriz.agregarActor("estela"+Integer.toString(ID)+".gif",-50,-50,tmp);
+		NodoActor tmp=matriz.agregarActor("estela"+Integer.toString(ID)+".gif",-50,-50);
+		contraimagen.extra=tmp;
+		contraimagen=tmp;
 		tail.sig=est;
 		tail.sig.ant=tail;
 		tail=est;
@@ -51,91 +56,6 @@ public class ListaMoto {
 		if(head.getEstela()>tam){
 			add();
 		}
-	}
-	
-	public void enlazar(){
-		NodoMoto tmp=tail;
-		if(tmp.abajo!=null){
-		tmp.abajo.setEstado(false, "");}
-		tmp.abajo=tmp.ant.abajo;
-		tmp=tmp.ant;
-		if(tmp.abajo!=null){
-		tmp.abajo.setEstado(true, "estela");}
-		while(tmp!=head){
-			tmp.abajo=tmp.ant.abajo;
-			tmp=tmp.ant;
-			if(tmp.abajo!=null){
-			tmp.abajo.setEstado(true, "estela");
-			}
-		}	
-		
-		switch(head.getDireccion()){
-		case "arr": 	
-			if(head.abajo.up!=null)
-		{	
-			head.abajo=head.abajo.up;
-			imagen.setPosX(head.abajo.getPosX());
-			imagen.setPosY(head.abajo.getPosY());
-			NodoActor punt=imagen.next;
-			NodoMoto punt2=head.sig;
-			while(punt!=null && punt2!=null)
-			{ if(punt2.abajo!=null){	
-				punt.setPosX(punt2.abajo.getPosX());
-				punt.setPosY(punt2.abajo.getPosY());}
-				punt=punt.next;
-				punt2=punt2.sig;
-			};
-			verificar();}break;
-		case "abj": 
-			if(head.abajo.down!=null)
-		{	head.abajo=head.abajo.down;
-		imagen.setPosX(head.abajo.getPosX());
-		imagen.setPosY(head.abajo.getPosY());
-		NodoActor punt=imagen.next;
-		NodoMoto punt2=head.sig;
-		while(punt!=null && punt2!=null)
-		{ if(punt2.abajo!=null){	
-			punt.setPosX(punt2.abajo.getPosX());
-			punt.setPosY(punt2.abajo.getPosY());}
-			punt=punt.next;
-			punt2=punt2.sig;
-		};
-		verificar();}break;
-		case "der": 
-			if(head.abajo.right!=null)
-		{	head.abajo=head.abajo.right;
-			imagen.setPosX(head.abajo.getPosX());
-			imagen.setPosY(head.abajo.getPosY());
-			NodoActor punt=imagen.next;
-			NodoMoto punt2=head.sig;
-			while(punt!=null && punt2!=null)
-			{if(punt2.abajo!=null){ 	
-				punt.setPosX(punt2.abajo.getPosX());
-				punt.setPosY(punt2.abajo.getPosY());}
-				punt=punt.next;
-				punt2=punt2.sig;
-			};
-			verificar();}break;
-		case "izq": 
-			if(head.abajo.left!=null)
-		{	head.abajo=head.abajo.left;
-			imagen.setPosX(head.abajo.getPosX());
-			imagen.setPosY(head.abajo.getPosY());
-			NodoActor punt=imagen.next;
-			NodoMoto punt2=head.sig;
-			while(punt!=null && punt2!=null)
-			{if(punt2.abajo!=null){
-				punt.setPosX(punt2.abajo.getPosX());
-				punt.setPosY(punt2.abajo.getPosY());}
-				punt=punt.next;
-				punt2=punt2.sig;
-			};
-			verificar();}break;
-		}
-		//head.reduceGas();
-		/*if(head.getGas()==0.0){
-			destruirMoto();
-		}*/
 	}
 		
 	public void verificar() {
@@ -155,46 +75,177 @@ public class ListaMoto {
 				case "escudo":head.agregarPoder(k);matriz.quitarActor(head.abajo.getPosX(),head.abajo.getPosY(),"item");break;   
 				case "bomba":matriz.quitarActor(head.abajo.getPosX(),head.abajo.getPosY(),"item");destruirMoto();break;
 				}
-			}break;}
+			}
+			if(head!=null && head.abajo!=null){
+			head.abajo.setEstado(true, "moto");}
+			break;}
 			case "moto":{destruirMoto();break;}
-			case "estela":{if(escudo!="activo"){destruirMoto();}else{escudo="desac";};break;}
+			case "estela":{if(escudo!="activo"){destruirMoto();}else{escudo="desac";matriz.quitarActor("escudoMoto.gif",refEscudo.getPosX(),refEscudo.getPosY());}refEscudo=null;break;}
 			}
 		}
 		try {
-			Thread.sleep(head.getVel());
+			if(head!=null){
+				Thread.sleep(head.getVel());
+			}
+			
 		} catch (InterruptedException e) {
-			System.out.print("Error al mover la moto\n");
+			System.out.print("Error en el tiempo de espera de la moto\n");
 			e.printStackTrace();
 		}
 		
 	}
 	
+	public void avanzar(){
+		switch(head.getDireccion()){
+		case "abj":{
+			if(head.abajo.down!=null && head.abajo.down!=head.sig.abajo){
+				NodoMoto pto = tail;
+				if(pto.abajo!=null){
+					pto.abajo.setEstado(false, "");
+				}
+				while(pto!=head){
+					pto.abajo=pto.ant.abajo;
+					if(pto.abajo!=null){
+					pto.abajo.setEstado(true, "estela");
+					}
+					pto=pto.ant;
+				}
+				head.abajo=head.abajo.down;
+				NodoMoto ptemp=head;
+				NodoActor pAct=imagen;
+				if(refEscudo!=null){
+					refEscudo.setPosX(head.abajo.getPosX());
+					refEscudo.setPosY(head.abajo.getPosY());
+				}
+				while(ptemp!=null && ptemp.abajo!=null && pAct!=null){
+					pAct.setPosX(ptemp.abajo.getPosX());
+					pAct.setPosY(ptemp.abajo.getPosY());
+					pAct=pAct.extra;
+					ptemp=ptemp.sig;
+				}
+				verificar();
+				if(head!=null){
+					head.reduceGas();	
+				}
+			}
+			break;}
+		case "arr":{
+			if(head.abajo.up!=null && head.abajo.up!=head.sig.abajo){
+				NodoMoto pto = tail;
+				if(pto.abajo!=null){
+					pto.abajo.setEstado(false, "");
+				}
+				while(pto!=head){
+					pto.abajo=pto.ant.abajo;
+					if(pto.abajo!=null){
+					pto.abajo.setEstado(true, "estela");
+					}
+					pto=pto.ant;
+				}
+				head.abajo=head.abajo.up;
+				NodoMoto ptemp=head;
+				NodoActor pAct=imagen;
+				if(refEscudo!=null){
+					refEscudo.setPosX(head.abajo.getPosX());
+					refEscudo.setPosY(head.abajo.getPosY());
+				}
+				while(ptemp!=null && ptemp.abajo!=null && pAct!=null){
+					pAct.setPosX(ptemp.abajo.getPosX());
+					pAct.setPosY(ptemp.abajo.getPosY());
+					pAct=pAct.extra;
+					ptemp=ptemp.sig;
+				}
+				verificar();
+				if(head!=null){
+					head.reduceGas();	
+				}
+			}
+			break;}
+		case "der":{
+			if(head.abajo.right!=null && head.abajo.right!=head.sig.abajo){
+				NodoMoto pto = tail;
+				if(pto.abajo!=null){
+					pto.abajo.setEstado(false, "");
+				}
+				while(pto!=head){
+					pto.abajo=pto.ant.abajo;
+					if(pto.abajo!=null){
+					pto.abajo.setEstado(true, "estela");
+					}
+					pto=pto.ant;
+				}
+				head.abajo=head.abajo.right;
+				NodoMoto ptemp=head;
+				NodoActor pAct=imagen;
+				if(refEscudo!=null){
+					refEscudo.setPosX(head.abajo.getPosX());
+					refEscudo.setPosY(head.abajo.getPosY());
+				}
+				while(ptemp!=null && ptemp.abajo!=null && pAct!=null){
+					pAct.setPosX(ptemp.abajo.getPosX());
+					pAct.setPosY(ptemp.abajo.getPosY());
+					pAct=pAct.extra;
+					ptemp=ptemp.sig;
+				}
+				verificar();
+				if(head!=null){
+					head.reduceGas();	
+				}
+			}
+			break;}
+		case "izq":{
+			if(head.abajo.left!=null && head.abajo.left!=head.sig.abajo){
+				NodoMoto pto = tail;
+				if(pto.abajo!=null){
+					pto.abajo.setEstado(false, "");
+				}
+				while(pto!=head){
+					pto.abajo=pto.ant.abajo;
+					if(pto.abajo!=null){
+					pto.abajo.setEstado(true, "estela");
+					}
+					pto=pto.ant;
+				}
+				head.abajo=head.abajo.left;
+				NodoMoto ptemp=head;
+				NodoActor pAct=imagen;
+				if(refEscudo!=null){
+					refEscudo.setPosX(head.abajo.getPosX());
+					refEscudo.setPosY(head.abajo.getPosY());
+				}
+				while(ptemp!=null && ptemp.abajo!=null && pAct!=null){
+					pAct.setPosX(ptemp.abajo.getPosX());
+					pAct.setPosY(ptemp.abajo.getPosY());
+					pAct=pAct.extra;
+					ptemp=ptemp.sig;
+				}
+				verificar();
+				if(head!=null){
+					head.reduceGas();	
+				}
+				
+			}
+			break;}
+	}
+	if(head != null && head.getGas()<=0.0){
+		destruirMoto();
+	}
+}
+	
 	public void destruirMoto()
-	{
-		/*NodoActor puntero=imagen;
-		while(puntero!=null){
-			matriz.quitarActor(puntero);
-			puntero=puntero.next;
+	{	matriz.distribMatriz(head.getItems(), head.getPoderes());
+		while(head!=null && head.abajo!=null){
+			head.abajo.setEstado(false,"");
+			head=head.sig;
 		}
-		matriz.quitarActor(imagen);
-		
-		NodoMoto tm=head;
-		while(tm!=null){
-			tm.abajo.setEstado(false, "");
-			tm.abajo=null;
-			tm=tm.sig;
+		while(imagen!=null){
+			imagen.setNombreImagen("vacio.gif");
+			imagen=imagen.extra;
 		}
-		head=tail=null;*/
-		matriz.getListaActores().imprimir();
-		matriz.distribMatriz(head.getItems(), head.getPoderes());
-		int ye=matriz.getListaActores().getTam();
-		matriz.quitarMoto("estela1.gif");
-		if(matriz.getListaActores().getTam()==ye){
-			System.out.print("Mierda");
+		if(refEscudo!=null){
+			refEscudo.setNombreImagen("vacio.gif");
 		}
-		//matriz.quitarMoto("moto.gif");
-		System.out.print("\n\n\n");
-		matriz.getListaActores().imprimir();
+		matriz.getListaActores().eliminarMoto("vacio.gif");
 		vivo=false;
 	}
 	
@@ -203,53 +254,36 @@ public class ListaMoto {
 	}
 	
 	public void aplicarItem(){
-		while(true){
-			if(head.getItems().getTam()>0){
+			if( head!=null && head.getItems().getTam()>0){
 				switch(head.getItems().getItem().getNombre()){
 				case "combustible":head.aumGas(head.getItems().remove().getValor());break;
 				case "aumestela":head.setEstela(head.getItems().remove().getValor());aumentarLista();break;
 				}
+				
 			}
-		}
+		
 	}
 	
 	public void aplicarPoder(){
-		Item pod=head.getPoderes().remove();
-		switch(pod.getNombre()){
-		case "escudo": escudo="activo";break;
-		case "velocidad":head.setVel(pod.getValor());break;
+		if(head!=null && head.getPoderes().getTam()!=0){
+			Item pod=head.getPoderes().remove();
+			switch(pod.getNombre()){
+			case "escudo": escudo="activo";refEscudo=matriz.agregarActor("escudoMoto.gif", imagen.getPosX(), imagen.getPosY());System.out.print("Tiene escudo");break;
+			case "velocidad":head.setVel(pod.getValor());break;
+			}	
 		}
+		
 	}
 	
-	
-	public void dead(){
-		
-		
-		while(tail!=head){
-			tail.abajo.setEstado(false, "");
-			tail.abajo=head.abajo;
-			tail=tail.ant;
-		}
-		imagen.setImagen("vacio.gif");
-		head.abajo.setEstado(false, "");
-		head.abajo=matriz.esqSI;
-	}
 	
 	
 	public void moverse(){
-		if(vivo==false){
-			dead();
-		}
-		else{
-			enlazar();	
+		if(vivo==true){
+			avanzar();
 		}
 		
 	}
 
 	
-	
-	public static void main(String[] args) {
-
-	}
 
 }

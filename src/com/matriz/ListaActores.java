@@ -1,6 +1,10 @@
 package com.matriz;
 
-public class ListaActores {
+import java.io.Serializable;
+
+public class ListaActores implements Serializable {
+	
+	
 	
 	private NodoActor head,tail;
 	private int tam;
@@ -21,7 +25,6 @@ public class ListaActores {
 				tam--;
 			}
 			else{
-				//System.out.print("\n"+nom+"\n"+head.getNomImagen()+"\n-------\n");
 				break;
 			}
 		}
@@ -38,13 +41,14 @@ public class ListaActores {
 					eliminarMoto(nom);
 				}
 				else{
-					//System.out.print("\n"+nom+"\n"+tmp.getNomImagen()+"\n-------\n");
 					tmp=tmp.next;
 				}
 			}
 		}
 	}
 		}
+	
+	
 	
 	public void imprimir(){
 		NodoActor tmp=head;
@@ -53,6 +57,7 @@ public class ListaActores {
 			tmp=tmp.next;
 		}
 	}
+	
 	
 	public void add(String direccion,int x,int y,String nombre){
 		NodoActor nuevo= new NodoActor(direccion,x,y);
@@ -69,21 +74,17 @@ public class ListaActores {
 		}
 	}
 	
-	public NodoActor add(String direccion,int x,int y,NodoActor puntero){
+	public NodoActor add(String direccion,int x,int y){
 		NodoActor nuevo= new NodoActor(direccion,x,y);
 		nuevo.setNombre("moto");
-		puntero=nuevo;
+		nuevo.next=head;
 		if(tam==0){
-			head=tail=nuevo;
-			tam++;
-		}
+		tail=head=nuevo;}
 		else{
-			tail.next=nuevo;
-			nuevo.prev=tail;
-			tail=nuevo;
-			tam++;
-		}
-		return puntero;
+			head.prev=nuevo;
+			head=nuevo;}
+		tam++;
+		return head;
 	}
 	
 	public void remove(int x,int y,String nombre){
@@ -114,33 +115,41 @@ public class ListaActores {
 }
 }
 	
+	public void remove(String nombreImagen,int x,int y){
+		if(tam!=0){
+			if(head.getPosX()==x && head.getPosY()==y && head.getNomImagen()==nombreImagen){
+				head=head.next;
+				head.prev=null;
+				tam--;
+			}
+			else{
+				if(tam>1){
+				NodoActor tmp=head;
+				while(tmp.next!=null){
+					if(tmp.next.getPosX()==x && tmp.next.getPosY()==y && tmp.next.getNomImagen()==nombreImagen){
+						if(tmp.next==tail){
+							tail=tmp;
+						}
+						tmp.next=tmp.next.next;
+						if(tmp.next!=null){
+						tmp.next.prev=tmp;}
+						tam--;
+						break;
+					}
+					tmp=tmp.next;
+				}
+			}
+		}
+	}
+	}
+	
 	public int getTam(){
 		return tam;
 	}
 	 public NodoActor getHead(){
 		 return head;
 	 }
-	 
-	 
-	 public static void main(String[] args){
-		 ListaActores  j=new ListaActores();
-		 j.add("estela1.gif", 5, 6, "algo");
-		 j.add("estela1.gif", 5, 6, "algo");
-		 j.add("gas.gif", 5, 6, "algo");
-		 j.add("estela1.gif", 5, 6, "algo");
-		 j.add("moto.gif", 5, 6, "algo");
-		 j.add("moto.gif", 5, 6, "algo");
-		 j.add("estela1.gif", 5, 6, "algo");
-		 j.add("moto.gif", 5, 6, "algo");
-		 j.add("estela1.gif", 5, 6, "algo");
-		 j.add("moto.gif", 5, 6, "algo");
-		 j.add("estela1.gif", 5, 6, "algo");
-		 System.out.print(j.getTam());
-		 j.imprimir();
-		 j.eliminarMoto("gas.gif");
-		System.out.print(j.getTam());
-		 j.imprimir();
-		 
-		 
+	 public void setHead(NodoActor pto){
+		 head=pto;
 	 }
 }

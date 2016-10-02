@@ -13,7 +13,7 @@ public class HiloEnvia extends Thread {
 		while(true){
 		NodoJugador tmp=servidor.jugadores.head;
 		while(tmp!=null && servidor.jugadores.getTam()!=0){
-			servidor.enviar(tmp.getIP(), tmp.getPuerto());
+			servidor.enviar(tmp.getIP(), tmp.getPuerto(),tmp.getPlayer());
 			tmp=tmp.next;
 		}
 	}

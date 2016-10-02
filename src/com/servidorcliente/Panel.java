@@ -18,14 +18,14 @@ public class Panel  extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private Dimension d;
-	ListaActores actores;
+	private ListaActores actores;
 	
 	public Panel(ListaActores act) {
 		actores=act;
 		d=new Dimension(700,700);
 		setDoubleBuffered(true);
+		
 	}
-	
 	
 	public void paintComponent(Graphics g){
 		doDrawing(g);
@@ -37,10 +37,16 @@ public class Panel  extends JPanel {
 		Graphics2D g2d=(Graphics2D) g;
 		g.setColor(getBackground());
 		g.fillRect(0, 0, getWidth(), getHeight());
+		Image fondo=new ImageIcon(getClass().getClassLoader().getResource("Imagenes/carretera704x704.gif")).getImage();
+		g2d.drawImage(fondo,0,0,this);
 		NodoActor tmp=actores.getHead();
 		while(tmp!=null){
-			g2d.drawImage(tmp.getImagen(),tmp.getPosX(),tmp.getPosY(),this);
+			Image imagen=new ImageIcon(getClass().getClassLoader().getResource("Imagenes/"+tmp.getNomImagen())).getImage();
+			g2d.drawImage(imagen,tmp.getPosX(),tmp.getPosY(),this);
 			tmp=tmp.next;
+			 Toolkit.getDefaultToolkit().sync();
+			 Toolkit.getDefaultToolkit().sync();
+			 
 		}
 		Toolkit.getDefaultToolkit().sync();
 	    g2d.dispose();

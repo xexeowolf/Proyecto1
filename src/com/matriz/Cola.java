@@ -1,5 +1,5 @@
 package com.matriz;
-import com.servidorcliente.*;
+
 public class Cola {
 	
 	protected NodoItem head,tail;

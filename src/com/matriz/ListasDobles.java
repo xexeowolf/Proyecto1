@@ -14,13 +14,13 @@ public class ListasDobles {
 		NodoMatriz primer= new NodoMatriz();
 		primer.setPosX(x);
 		primer.setPosY(y);
-		x=x+32;
+		x=x+16;
 		head=tail=primer;
 		if (cantElem>=2){
 			NodoMatriz segundo=new NodoMatriz();
 			segundo.setPosX(x);
 			segundo.setPosY(y);
-			x=x+32;
+			x=x+16;
 			segundo.left=head;
 			head.right=segundo;
 			tail=segundo;
@@ -32,7 +32,7 @@ public class ListasDobles {
 				nuevo.left=tail;
 				tail.right=nuevo;
 				tail=nuevo;
-				x=x+32;
+				x=x+16;
 			}
 		}
 	}

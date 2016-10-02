@@ -27,6 +27,37 @@ public class Pila {
 			return null;
 		}
 	}
+	
+	public void ubicar(String nom){
+		if(tam>0){
+			if(top.getItem().getNombre()!=nom){
+				NodoItem tempant=top;
+				NodoItem temp=top.next;
+				while(temp!=null){
+					if(temp.getItem().getNombre()==nom){
+						tempant.next=temp.next;
+						temp.next=top;
+						top=temp;
+						break;
+					}
+					temp=temp.next;
+					tempant=tempant.next;
+				}
+			}
+		}
+	}
+	
+	public int inventario(String nom){
+		int i=0;
+		NodoItem tmp=top;
+		while(tmp!=null){
+			if(tmp.getItem().getNombre()==nom){
+				i++;
+			}
+			tmp=tmp.next;
+		}
+		return i;
+	}
 
 	public int getTam(){
 		return tam;

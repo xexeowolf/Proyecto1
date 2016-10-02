@@ -21,7 +21,7 @@ import org.json.JSONObject;
 import com.matriz.ListaActores;
 import com.matriz.NodoActor;
 
-public class ClienteVentana extends Thread implements ActionListener,KeyListener {
+public class ClienteVentana extends Thread implements KeyListener {
 
 	private SubVentana pantalla;
 	private JFrame ventana;
@@ -29,12 +29,14 @@ public class ClienteVentana extends Thread implements ActionListener,KeyListener
 	private JTextField ip,nick,puerto;
 	private JButton btn;
 	private int PuertoV;
-	int x;
+	public ClienteVentana mismo;
 	
 	public ClienteVentana() {
-		x=0;
 		pantalla=new SubVentana();
 		pantalla.addKeyListener(this);
+		pantalla.listapoderes.addKeyListener(this);
+		pantalla.btn.addKeyListener(this);
+		pantalla.setFocusable(true);
 		ventana=new JFrame("Bienvenido");
 		ventana.setBounds(0,0,600,175);
 		label1=new JLabel("Ingrese un nombre: ");
@@ -51,7 +53,48 @@ public class ClienteVentana extends Thread implements ActionListener,KeyListener
 		puerto.setBounds(350,90,200,20);
 		btn=new JButton("Enviar");
 		btn.setBounds(250,120,80,20);
-		btn.addActionListener(this);
+		btn.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(arg0.getSource()==btn){
+					setConexion();
+					mismo.start();
+					ventana.setVisible(false);
+					pantalla.setVisible(true);
+					
+				}
+				
+			}
+			
+		});
+		pantalla.btn.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg1) {
+				if(arg1.getSource()==pantalla.btn){
+					try{
+						Socket cli= new Socket("192.168.1.62",9095);
+						JSONObject medio= new JSONObject();
+						medio.put("val",3);
+						medio.put("puerto",PuertoV);
+						String poder=(String)pantalla.listapoderes.getSelectedItem();
+						if(poder=="escudo"){
+							medio.put("poder", 1);
+						}
+						else{
+							medio.put("poder", 2);
+						}
+						ObjectOutputStream flujo= new ObjectOutputStream(cli.getOutputStream());
+						flujo.writeObject(medio);
+						cli.close();
+					} catch(Exception ex){System.out.print("Error al enviar aplicacion de poder en el cliente\n");ex.printStackTrace();}
+					
+				}
+				
+			}
+			
+		});
 		ventana.setVisible(true);
 		ventana.setLayout(null);
 		ventana.setResizable(false);
@@ -72,7 +115,7 @@ public class ClienteVentana extends Thread implements ActionListener,KeyListener
 					ObjectOutputStream flujo= new ObjectOutputStream(cli.getOutputStream());
 					flujo.writeObject(medio);
 					cli.close();
-				} catch(Exception ex){System.out.print("Error al enviar actualizacion en el cliente\n");ex.printStackTrace();}
+				} catch(Exception ex){System.out.print("Error al enviar cierre en el cliente\n");ex.printStackTrace();}
 				System.exit(0);
 			}
 		});
@@ -89,7 +132,7 @@ public class ClienteVentana extends Thread implements ActionListener,KeyListener
 			ObjectOutputStream flujo= new ObjectOutputStream(cli.getOutputStream());
 			flujo.writeObject(medio);
 			cli.close();
-		} catch(Exception ex){System.out.print("Error al enviar actualizacion en el cliente\n");ex.printStackTrace();}
+		} catch(Exception ex){System.out.print("Error al enviar inicio de conexion en el cliente\n");ex.printStackTrace();}
 	}
 	
 	public void enviar(String dir){
@@ -102,48 +145,42 @@ public class ClienteVentana extends Thread implements ActionListener,KeyListener
 			ObjectOutputStream flujo= new ObjectOutputStream(cli.getOutputStream());
 			flujo.writeObject(medio);
 			cli.close();
-		} catch(Exception ex){System.out.print("Error al enviar actualizacion en el cliente\n");ex.printStackTrace();}
+		} catch(Exception ex){System.out.print("Error al enviar actualizacion en el cliente\n");/*ex.printStackTrace();*/}
 	}
 
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		setConexion();
-		ventana.setVisible(false);
-		pantalla.setVisible(true);
-		
-
-	}
 
 	@Override
 	public void keyPressed(KeyEvent x) {
 		switch(x.getKeyCode()){
-		case KeyEvent.VK_DOWN:enviar("abj")/*System.out.print("abajo")*/;break;
-		case KeyEvent.VK_UP:enviar("arr")/*System.out.print("arriba")*/;break;
-		case KeyEvent.VK_LEFT:enviar("izq")/*System.out.print("izq")*/;break;
-		case KeyEvent.VK_RIGHT:enviar("der")/*System.out.print("der")*/;break;}
+		case KeyEvent.VK_DOWN:enviar("abj");break;
+		case KeyEvent.VK_UP:enviar("arr");break;
+		case KeyEvent.VK_LEFT:enviar("izq");break;
+		case KeyEvent.VK_RIGHT:enviar("der");break;}
 		}
 
 	
 	public void run(){
 		try{
-			ServerSocket serv=new ServerSocket(9096);//PuertoV
+			ServerSocket serv=new ServerSocket(PuertoV);//PuertoV
 			Socket cli;
 			while(true){
 				cli=serv.accept();
 				ObjectInputStream flujo = new ObjectInputStream(cli.getInputStream());
 				JSONObject recibido=new JSONObject();
 				recibido=(JSONObject)flujo.readObject();
-				int cont=recibido.getInt("Cantidad");
-				ListaActores nueva=new ListaActores();
-				while(cont!=0){
-					nueva.add(recibido.getString("Imagen"+Integer.toString(cont)),recibido.getInt("PosX"+Integer.toString(cont)),recibido.getInt("PosY"+Integer.toString(cont)) ,"");
-					cont--;
+				pantalla.setImagenes((ListaActores)recibido.get("lista"));
+				pantalla.t1.setText(null);
+				pantalla.t2.setText(null);
+				pantalla.t3.setText(null);
+				if(recibido.getBoolean("val")==true){
+					pantalla.t1.append(Integer.toString(recibido.getInt("gas")));
+					pantalla.t2.append(Integer.toString(recibido.getInt("escudo")));
+					pantalla.t3.append(Integer.toString(recibido.getInt("veloc")));	
 				}
-				pantalla.setImagenes(nueva);
 				cli.close();
 			}
-		} catch(Exception g){System.out.print("Error al recibir en el hilo principal");g.printStackTrace();}
+		} catch(Exception g){System.out.print("Error al recibir en el hilo principal del cliente");g.printStackTrace();}
 	}
 	
 	
@@ -160,7 +197,7 @@ public class ClienteVentana extends Thread implements ActionListener,KeyListener
 	}
 	public static void main(String[] args) {
 		ClienteVentana lol=new ClienteVentana();
-		lol.start();
+		lol.mismo=lol;
 	}
 
 }

@@ -15,6 +15,7 @@ public class MatrizDinamica {
 	private ListaActores actores;
 	
 	
+	
 	public MatrizDinamica(int f,int c){
 		if(f!=0 && c!=0){
 		generarMatriz(f,c);
@@ -35,8 +36,8 @@ public class MatrizDinamica {
 	public void setListaActores(ListaActores act){
 		actores=act;
 	}
-	public NodoActor agregarActor(String nombre,int x,int y,NodoActor tmp){
-		return actores.add(nombre, x, y,tmp);
+	public NodoActor agregarActor(String nombre,int x,int y){
+		return actores.add(nombre, x, y);
 	}
 	public void quitarMoto(String nom){
 		actores.eliminarMoto(nom);
@@ -46,6 +47,9 @@ public class MatrizDinamica {
 	}
 	public void quitarActor(int x,int y,String nombre){
 		actores.remove(x,y,nombre);
+	}
+	public void quitarActor(String nombreImagen,int x,int y){
+		actores.remove(nombreImagen,x,y);
 	}
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Metodo para buscar posiciones libre donde colocar la moto.
@@ -120,7 +124,7 @@ public class MatrizDinamica {
 						case "combustible": actores.add("gas.gif", colocador.getPosX(), colocador.getPosY(),"item");break;
 						case "aumestela": actores.add("agregarEstela.gif", colocador.getPosX(), colocador.getPosY(),"item");break;
 						case "velocidad": actores.add("nitro.gif", colocador.getPosX(), colocador.getPosY(),"item");break;
-						case "bomba":actores.add("estela4.gif", colocador.getPosX(), colocador.getPosY(),"item");break;
+						case "bomba":actores.add("bomba.gif", colocador.getPosX(), colocador.getPosY(),"item");break;
 						case "escudo":actores.add("escudo.gif", colocador.getPosX(), colocador.getPosY(),"item");break;
 						}
 						colocador.setItem(elementos);
@@ -141,7 +145,7 @@ public class MatrizDinamica {
 					case "combustible": actores.add("gas.gif", distribuir.getPosX(), distribuir.getPosY(),"item");break;
 					case "aumestela": actores.add("agregarEstela.gif", distribuir.getPosX(), distribuir.getPosY(),"item");break;
 					case "velocidad": actores.add("nitro.gif", distribuir.getPosX(), distribuir.getPosY(),"item");break;
-					case "bomba":actores.add("bicho.gif", distribuir.getPosX(), distribuir.getPosY(),"item");break;
+					case "bomba":actores.add("bomba.gif", distribuir.getPosX(), distribuir.getPosY(),"item");break;
 					case "escudo":actores.add("escudo.gif", distribuir.getPosX(), distribuir.getPosY(),"item");break;
 					}
 					distribuir.setItem(itm);
@@ -178,7 +182,7 @@ public class MatrizDinamica {
 		esqSI=current.head;
 		esqSD=current.tail;
 		while(filas<cantFilas){
-			ListasDobles nuevo= new ListasDobles(0,filas*32);
+			ListasDobles nuevo= new ListasDobles(0,filas*16);
 			nuevo.generarLista(cantCol);
 			ListasDobles temp=nuevo;
 			NodoMatriz recA=current.head;

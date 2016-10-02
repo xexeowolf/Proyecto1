@@ -12,7 +12,7 @@ public class Ventana extends JFrame{
 	public MatrizDinamica matriz;
 	
 	public Ventana() {
-		matriz=new MatrizDinamica(20,20);
+		matriz=new MatrizDinamica(43,43);
 		panel=new Panel(matriz.getListaActores());
 		add(panel);
 		setTitle("Servidor");

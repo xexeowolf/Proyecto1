@@ -11,9 +11,11 @@ public class NodoMoto {
 	public NodoMatriz abajo;
 	public NodoMoto sig;
 	public NodoMoto ant;
+	private int pasos;
 	
 	
 	public NodoMoto(){
+		pasos=0;
 		estela=3;
 		velocidad=300;
 		combustible=100.0;
@@ -51,6 +53,13 @@ public class NodoMoto {
 	}
 	
 	public void reduceGas(){
+		if(velocidad<300 && pasos==100){
+			velocidad=300;
+			pasos=0;
+		}
+		else{
+			pasos++;
+		}
 		combustible=combustible-0.2;
 	}
 	
