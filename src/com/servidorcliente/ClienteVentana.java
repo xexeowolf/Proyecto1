@@ -62,6 +62,7 @@ public class ClienteVentana extends Thread implements KeyListener {
 					mismo.start();
 					ventana.setVisible(false);
 					pantalla.setVisible(true);
+					pantalla.setTitle("Usuario-"+nick.getText());
 					
 				}
 				
@@ -74,18 +75,16 @@ public class ClienteVentana extends Thread implements KeyListener {
 			public void actionPerformed(ActionEvent arg1) {
 				if(arg1.getSource()==pantalla.btn){
 					try{
-						Socket cli= new Socket("192.168.1.62",9095);
+						Socket cli= new Socket("172.26.100.167",9095);
 						JSONObject medio= new JSONObject();
 						medio.put("val",3);
 						medio.put("puerto",PuertoV);
 						String poder=(String)pantalla.listapoderes.getSelectedItem();
 						if(poder=="Escudo"){
 							medio.put("poder", 1);
-							System.out.print("entro a escudo");
 						}
 						else{
 							medio.put("poder", 2);
-							System.out.print("entro a vel");
 						}
 						ObjectOutputStream flujo= new ObjectOutputStream(cli.getOutputStream());
 						flujo.writeObject(medio);
@@ -110,7 +109,7 @@ public class ClienteVentana extends Thread implements KeyListener {
 		pantalla.addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent ep){
 				try{
-					Socket cli= new Socket("192.168.1.62",9095);
+					Socket cli= new Socket("172.26.100.167",9095);
 					JSONObject medio= new JSONObject();
 					medio.put("val",2);
 					medio.put("puerto",PuertoV);
@@ -125,7 +124,7 @@ public class ClienteVentana extends Thread implements KeyListener {
 
 	public void setConexion(){
 		try{
-			Socket cli= new Socket("192.168.1.62",9095);
+			Socket cli= new Socket("172.26.100.167",9095);
 			JSONObject medio= new JSONObject();
 			PuertoV=Integer.parseInt(puerto.getText());
 			medio.put("puerto", PuertoV);
@@ -139,7 +138,7 @@ public class ClienteVentana extends Thread implements KeyListener {
 	
 	public void enviar(String dir){
 		try{
-			Socket cli= new Socket("192.168.1.62",9095);
+			Socket cli= new Socket("172.26.100.167",9095);
 			JSONObject medio= new JSONObject();
 			medio.put("val",5);
 			medio.put("direccion", dir);

@@ -27,14 +27,17 @@ public class Jugadores {
 		}
 		
 	}
-	public void eliminar(int ps){
+	public int eliminar(int ps){
+		int num=0;
 		if(head.getPuerto()==ps){
+			num=head.getPlayer().ID;
 			head=head.next;
 		}
 		else{
 			NodoJugador tmp=head;
 			while(tmp.next!=null){
 				if(tmp.next.getPuerto()==ps){
+					num=tmp.next.getPlayer().ID;
 					if(tmp.next==tail){
 						tail=tmp;
 					}
@@ -43,6 +46,7 @@ public class Jugadores {
 				}	
 			}
 		}
+		return num;
 	}
 	
 	public NodoJugador buscar(int pto){
@@ -56,16 +60,16 @@ public class Jugadores {
 		return null;
 	}
 	
+	public void eliminarAlInicio(){
+		head=head.next;
+	}
+	
 	public void setTam(int t){
 		tam=t;
 	}
 	
 	public int getTam(){
 		return tam;
-	}
-
-	
-	public static void main(String[] args) {
 	}
 
 }

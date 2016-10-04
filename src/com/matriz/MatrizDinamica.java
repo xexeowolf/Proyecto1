@@ -53,21 +53,18 @@ public class MatrizDinamica {
 	}
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //Metodo para buscar posiciones libre donde colocar la moto.
-	public NodoMatriz buscarLugar(){
-		if(esqSD.getEstado()==false){
-			return esqSD;
-		}
-		else if(esqSI.getEstado()==false){
+	public NodoMatriz buscarLugar(int ID){
+		if(ID==1){
 			return esqSI;
 		}
-		else if(esqID.getEstado()==false){
-			return esqID;
+		else if(ID==2){
+			return esqSD;
 		}
-		else if(esqII.getEstado()==false){
+		else if(ID==3){
 			return esqII;
 		}
 		else{
-			return null;
+			return esqID;
 		}
 	}
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -206,11 +203,11 @@ public class MatrizDinamica {
 		Random num=new Random();
 		while(items.getTam()>0){
 			Item obj=items.remove();
-			distribuirItem((num.nextInt(filas - 2) % 3 + 2) * un[num.nextInt(2)] ,(num.nextInt(columnas - 2) % 3 + 2)* un[num.nextInt(2)],obj);
+			distribuirItem((num.nextInt(filas - 2)  + 2) * un[num.nextInt(2)] ,(num.nextInt(columnas - 2)  + 2)* un[num.nextInt(2)],obj);
 		}
 		while(poderes.getTam()>0){
 			Item pod=poderes.remove();
-			distribuirItem((num.nextInt(filas - 2) % 3 + 2) * un[num.nextInt(2)] ,(num.nextInt(columnas - 2) % 3 + 2)* un[num.nextInt(2)],pod);
+			distribuirItem((num.nextInt(filas - 2) + 2) * un[num.nextInt(2)] ,(num.nextInt(columnas - 2)  + 2)* un[num.nextInt(2)],pod);
 		}
 		
 	}
@@ -220,7 +217,7 @@ public class MatrizDinamica {
 		int [] un={-1,1};
 		Random num=new Random();
 		while(true){
-			colocarItems((num.nextInt(filas - 2) % 3 + 2) * un[num.nextInt(2)] ,(num.nextInt(columnas - 2) % 3 + 2)* un[num.nextInt(2)]);
+			colocarItems((num.nextInt(filas - 2) + 2) * un[num.nextInt(2)] ,(num.nextInt(columnas - 2) + 2)* un[num.nextInt(2)]);
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {

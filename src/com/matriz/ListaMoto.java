@@ -7,22 +7,20 @@ public class ListaMoto {
 	private NodoActor imagen;
 	private NodoActor contraimagen;
 	private int tam;
-	private int ID;
+	public int ID;
 	private boolean vivo;
-	private String escudo;
+	public String escudo;
 	private MatrizDinamica matriz;
 	public HiloMovMoto hilo;
 	
 	
-
-	
 	public ListaMoto(int id,String nombre,MatrizDinamica m) {
 		NodoMoto nuevo=new NodoMoto();
 		ID=id;
-		nuevo.abajo=m.buscarLugar();
+		nuevo.abajo=m.buscarLugar(id);
 		matriz=m;
 		while(nuevo.abajo==null){
-			nuevo.abajo=m.buscarLugar();
+			nuevo.abajo=m.buscarLugar(id);
 		}
 		imagen=matriz.agregarActor(nombre, -50, -50);
 		contraimagen=imagen;
@@ -111,6 +109,7 @@ public class ListaMoto {
 					pto=pto.ant;
 				}
 				head.abajo=head.abajo.down;
+				imagen.setNombreImagen("moto"+Integer.toString(ID)+"abj.gif");
 				NodoMoto ptemp=head;
 				NodoActor pAct=imagen;
 				if(refEscudo!=null){
@@ -143,6 +142,7 @@ public class ListaMoto {
 					pto=pto.ant;
 				}
 				head.abajo=head.abajo.up;
+				imagen.setNombreImagen("moto"+Integer.toString(ID)+"arr.gif");
 				NodoMoto ptemp=head;
 				NodoActor pAct=imagen;
 				if(refEscudo!=null){
@@ -175,6 +175,7 @@ public class ListaMoto {
 					pto=pto.ant;
 				}
 				head.abajo=head.abajo.right;
+				imagen.setNombreImagen("moto"+Integer.toString(ID)+"der.gif");
 				NodoMoto ptemp=head;
 				NodoActor pAct=imagen;
 				if(refEscudo!=null){
@@ -207,6 +208,7 @@ public class ListaMoto {
 					pto=pto.ant;
 				}
 				head.abajo=head.abajo.left;
+				imagen.setNombreImagen("moto"+Integer.toString(ID)+"izq.gif");
 				NodoMoto ptemp=head;
 				NodoActor pAct=imagen;
 				if(refEscudo!=null){
@@ -233,7 +235,8 @@ public class ListaMoto {
 }
 	
 	public void destruirMoto()
-	{	matriz.distribMatriz(head.getItems(), head.getPoderes());
+	{	if(head!=null){
+			matriz.distribMatriz(head.getItems(), head.getPoderes());}
 		while(head!=null && head.abajo!=null){
 			head.abajo.setEstado(false,"");
 			head=head.sig;
@@ -268,7 +271,7 @@ public class ListaMoto {
 		if(head!=null && head.getPoderes().getTam()!=0){
 			Item pod=head.getPoderes().remove();
 			switch(pod.getNombre()){
-			case "escudo": escudo="activo";refEscudo=matriz.agregarActor("escudoMoto.gif", imagen.getPosX(), imagen.getPosY());break;
+			case "escudo": if(escudo!="activo"){refEscudo=matriz.agregarActor("escudoMoto.gif", imagen.getPosX(), imagen.getPosY());}escudo="activo";break;
 			case "velocidad":head.setVel(pod.getValor());break;
 			}	
 		}

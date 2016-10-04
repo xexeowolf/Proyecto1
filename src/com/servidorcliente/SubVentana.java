@@ -58,7 +58,7 @@ public class SubVentana extends JFrame{
 		add(t3);
 		add(listapoderes);
 		add(panel);
-		setTitle("Cliente");
+		setTitle("Usuario");
 		setSize(800,700);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -70,7 +70,6 @@ public class SubVentana extends JFrame{
 	public void setImagenes(ListaActores lista){
 		panel.setLista(lista);
 	}
-	
 	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 
