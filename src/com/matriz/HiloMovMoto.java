@@ -9,7 +9,7 @@ package com.matriz;
 public class HiloMovMoto extends Thread {
 
 
-	ListaMoto moto;
+	public ListaMoto moto;
 	
 	/**
 	 * Constructor de la clase.

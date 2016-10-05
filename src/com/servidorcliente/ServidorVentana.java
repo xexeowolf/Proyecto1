@@ -58,6 +58,8 @@ public class ServidorVentana extends Thread implements ActionListener,ChangeList
 	private JButton iniciar;
 	private JCheckBox opcion;
 	private JComboBox numBot;
+	public boolean inicioBot;
+	public long tiempoinicial;
 	
 	
 	Timer aplicaItems=new Timer(1000, new ActionListener(){	//Metodo que se ejecuta cada segundo, encargado de aplicar los efectos de los items que obtiene cada jugador.
@@ -72,6 +74,8 @@ public class ServidorVentana extends Thread implements ActionListener,ChangeList
 				tmp.getPlayer().aplicarItem();
 				tmp=tmp.next;
 			}
+			pantalla.textiempo.setText(null);
+			pantalla.textiempo.append("            "+Long.toString((System.currentTimeMillis()-tiempoinicial)/1000)+" s");
 		}
 		
 	});
@@ -83,7 +87,7 @@ public class ServidorVentana extends Thread implements ActionListener,ChangeList
 		 */
 		@Override
 		public void actionPerformed(ActionEvent arg1) {
-			boolean intento=buscarConexion(listaespera.head.getIP(),listaespera.head.getPuerto());
+			boolean intento=buscarConexion(listaespera.head.getIP(),listaespera.head.getPuerto(),"En espera");
 			if(intento==true){
 				listaespera.eliminarAlInicio();
 			}
@@ -91,18 +95,53 @@ public class ServidorVentana extends Thread implements ActionListener,ChangeList
 		
 	});
 	
-	Timer NumBots=new Timer(2000, new ActionListener(){	
+	Timer NumBots=new Timer(6000, new ActionListener(){	
+
+		/* (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
+		@SuppressWarnings("deprecation")
+		@Override
+		public void actionPerformed(ActionEvent arg1) {
+			if(self.listabots.getTam()<self.maxBots){
+				self.agregarBot();
+			}
+			if(self.inicioBot==false){
+				MovBots.start();
+				self.inicioBot=true;
+			}
+			
+		}
+		
+	});
+	
+	Timer MovBots=new Timer(1000, new ActionListener(){	
 
 		/* (non-Javadoc)
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		@Override
 		public void actionPerformed(ActionEvent arg1) {
-			if(self.listabots.getTam()<self.maxBots){
-				self.agregarBot();
+			NodoJugador templ= self.listabots.head;
+		if(templ!=null){	
+			while(templ!=null){
+				if(templ!=null && templ.getPlayer()!=null && templ.getPlayer().getHead()!=null && templ.getPlayer().getHead().abajo!=null){
+				templ.getPlayer().getHead().setDireccion(self.seguirMotoX(templ.getPlayer().getHead().abajo.getPosX()));	}
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					System.out.print("Error en la espera del hilo de los bots");
+					e.printStackTrace();
+				}
+				if(templ!=null && templ.getPlayer()!=null && templ.getPlayer().getHead()!=null && templ.getPlayer().getHead().abajo!=null){
+				templ.getPlayer().getHead().setDireccion(self.seguirMotoY(templ.getPlayer().getHead().abajo.getPosY()));	}
+				templ.getPlayer().aplicarItem();
+				templ.getPlayer().aplicarPoder();
+				templ=templ.next;
 			}
 			
 		}
+	}
 		
 	});
 	
@@ -114,10 +153,11 @@ public class ServidorVentana extends Thread implements ActionListener,ChangeList
 	 */
 	public ServidorVentana() {
 		agregarBots=false;
+		inicioBot=false;
 		ventana = new JFrame("Configuracion de la partida");
 		ventana.setBounds(0,0,450,190);
 		ventana.setLayout(null);
-		ventana.setResizable(false);
+		ventana.setResizable(false);//Se evita que el usuario cambie el tamano de la ventana
 		textBot=new JLabel("Cantidad de bots");
 		textBot.setBounds(240,120,150,20);
 		numBot=new JComboBox();
@@ -151,7 +191,7 @@ public class ServidorVentana extends Thread implements ActionListener,ChangeList
 		ventana.add(columnas);
 		ventana.add(iniciar);
 		ventana.setVisible(true);
-		ventana.addWindowListener(new WindowAdapter(){
+		ventana.addWindowListener(new WindowAdapter(){//Se asegura que todo proceso termine al cerrar la ventana
 			public void windowClosing(WindowEvent ep){
 				System.exit(0);
 			}
@@ -180,31 +220,45 @@ public class ServidorVentana extends Thread implements ActionListener,ChangeList
 	 * Si se supera el limite de conexiones establecido un usuario que este sobre este limite entra en una lista de espera hasta que se libere una conexion.
 	 * @param ip parametro que representa la direccion IP del dispositivo que desea conectarse.
 	 * @param ps puerto de salida representado por un numero entero, en caso de lograrse la conexion se utiliza en como medio de envio de informacion.
+	 * @param nick apodo que ingresa el usuario
 	 * @return true si se logra conectar un usuario y false si no.
 	 */
-	public boolean buscarConexion(String ip,int ps){
+	public boolean buscarConexion(String ip,int ps,String nick){
 		if(conexion1==true){
 			if(empezar==false){		//Verificacion necesaria para asegurar que solo existe un hilo colocador la pantalla. 
 				hiloC=new HiloColocador(pantalla.matriz);//Se ejecuta con el primer cliente que logra la conexion y solo una  vez.
 				hiloC.start();
 				aplicaItems.start();			//Se inicia el timer encargado de aplicar los efectos de los items.
+				tiempoinicial=System.currentTimeMillis();
 			}
 			agregarJugador("moto1abj.gif",ip,ps,1);
+			pantalla.textjug1.append("Nick: "+nick+"\n");
+			pantalla.textjug1.append("IP: "+ip+"\n");
+			pantalla.textjug1.append("Puerto: "+Integer.toString(ps)+"\n");
 			conexion1=false;	//Se cierra la conexion hasta que el jugador cierra la aplicacion del cliente.
 			return true;
 			
 		}
 		else if(conexion2==true){
 			agregarJugador("moto2abj.gif",ip,ps,2);
+			pantalla.textjug2.append("Nick: "+nick+"\n");
+			pantalla.textjug2.append("IP: "+ip+"\n");
+			pantalla.textjug2.append("Puerto: "+Integer.toString(ps)+"\n");
 			conexion2=false;//Se cierra la conexion hasta que el jugador cierra la aplicacion del cliente.
 			return true;
 		}
 		else if(conexion3==true){
 			agregarJugador("moto3abj.gif",ip,ps,3);
+			pantalla.textjug3.append("Nick: "+nick+"\n");
+			pantalla.textjug3.append("IP: "+ip+"\n");
+			pantalla.textjug3.append("Puerto: "+Integer.toString(ps)+"\n");
 			conexion3=false;//Se cierra la conexion hasta que el jugador cierra la aplicacion del cliente.
 			return true;
 		}else if(conexion4==true){
 			agregarJugador("moto4abj.gif",ip,ps,4);
+			pantalla.textjug4.append("Nick: "+nick+"\n");
+			pantalla.textjug4.append("IP: "+ip+"\n");
+			pantalla.textjug4.append("Puerto: "+Integer.toString(ps)+"\n");
 			conexion4=false;//Se cierra la conexion hasta que el jugador cierra la aplicacion del cliente.
 			return true;
 		}
@@ -238,57 +292,110 @@ public class ServidorVentana extends Thread implements ActionListener,ChangeList
 		} catch(Exception ex){System.out.print("Error al enviar actualizacion en el servidor\n");ex.printStackTrace();}
 	}
 	
+	/**
+	 * Metodo que genera un bot y lo agrega a la pantalla
+	 * @see ListaMoto,HiloMovMoto
+	 */
 	public void agregarBot(){
-		ListaMoto bot=new ListaMoto(4,"moto4abj.gif",pantalla.matriz);//CAMBIAR POR IMAGENES DE LOS BOTS
+		ListaMoto bot=new ListaMoto(5,"moto5abj.gif",pantalla.matriz);
 		listabots.agregar(bot, "l", 0);
 		hiloM=new HiloMovMoto(bot);
 		bot.hilo=hiloM;
 		hiloM.start();
 	}
 	
-	public String movimientoBots(int X,int Y,int XP,int YP){
-		int distX = Math.abs(X - XP);
-		int distY = Math.abs(Y - YP);
-		if (distX >= distY){
-			if (X >= XP){
+	/**
+	 * Metodo que genera un nueva direccion de un bot dependiendo de la distancia entre un jugador y este.
+	 * @param X posicion actual en el eje x del bot
+	 * @param XP posicion actual en el eje x de un usuario
+	 * @return cadena de texto que representa una nueva direccion
+	 */
+	public String movimientoBotsX(int X,int XP){
+		if (X >= XP){
 				return "izq";
 			}
 			else{
 				return "der";
 			}
+		
+	}
+	/**
+	 * Metodo que genera un nueva direccion de un bot dependiendo de la distancia entre un jugador y este.
+	 * @param Y posicion actual en el eje y del bot
+	 * @param YP posicion actual en el eje y de un usuario
+	 * @return cadena de texto que representa una nueva direccion
+	 */
+	public String movimientoBotsY(int Y,int YP){
+		if (Y >= YP){
+			return "arr";
 		}
-		else {
-			if (Y >= YP){
-				return "arr";
-			}
-			else{
-				return "abj";
-			}
+		else{
+			return "abj";
 		}
 	}
-	
-	 public String seguirMoto(int x,int y){
+	/**
+	 * Metodo que define a cual jugador un bot debe seguir en el eje x.
+	 * @param x posicion actual del bot en el eje x.
+	 * @return cadena de texto que representa la nueva direccion del bot
+	 */
+	public String seguirMotoX(int x){
 		 int ran =(int)((Math.random()* jugadores.getTam())+ 1);
 		 NodoJugador tmp = jugadores.head;
-		 if(ran==1){
-			 return movimientoBots(x,y,tmp.getPlayer().getHead().abajo.getPosX(),tmp.getPlayer().getHead().abajo.getPosY());
-		 }
-		 else if(ran==2){
-			 tmp=tmp.next;
-			 return movimientoBots(x,y,tmp.getPlayer().getHead().abajo.getPosX(),tmp.getPlayer().getHead().abajo.getPosY());
-		 }
-		 else if(ran==3){
-			 tmp=tmp.next.next;
-			 return movimientoBots(x,y,tmp.getPlayer().getHead().abajo.getPosX(),tmp.getPlayer().getHead().abajo.getPosY());
-		 }
-		 else if(ran==4){
-			 tmp=tmp.next.next.next;
-			 return movimientoBots(x,y,tmp.getPlayer().getHead().abajo.getPosX(),tmp.getPlayer().getHead().abajo.getPosY());
-		 }else{
-			 return "error";
-		 }
-
-		 }
+		 if(tmp!=null){
+			 if(ran==1){
+				 return movimientoBotsX(x,tmp.getPlayer().getHead().abajo.getPosX());
+			 }
+			 else if(ran==2){
+				 tmp=tmp.next;
+				 return movimientoBotsX(x,tmp.getPlayer().getHead().abajo.getPosX());
+			 }
+			 else if(ran==3){
+				 tmp=tmp.next.next;
+				 return movimientoBotsX(x,tmp.getPlayer().getHead().abajo.getPosX());
+			 }
+			 else if(ran==4){
+				 tmp=tmp.next.next.next;
+				 return movimientoBotsX(x,tmp.getPlayer().getHead().abajo.getPosX());
+			 }else{
+				 return "error";
+			 }
+			 }
+		 else{
+				 return "error";
+			 }
+	}
+	/**
+	 * Metodo que define a cual jugador un bot debe seguir en el eje y.
+	 * @param y posicion actual del bot en el eje y.
+	 * @return cadena de texto que representa la nueva direccion del bot
+	 */
+	public String seguirMotoY(int y){
+		 int ran =(int)((Math.random()* jugadores.getTam())+ 1);
+		 NodoJugador tmp = jugadores.head;
+		 if(tmp!=null){
+			 if(ran==1){
+				 return movimientoBotsY(y,tmp.getPlayer().getHead().abajo.getPosY());
+			 }
+			 else if(ran==2){
+				 tmp=tmp.next;
+				 return movimientoBotsY(y,tmp.getPlayer().getHead().abajo.getPosY());
+			 }
+			 else if(ran==3){
+				 tmp=tmp.next.next;
+				 return movimientoBotsY(y,tmp.getPlayer().getHead().abajo.getPosY());
+			 }
+			 else if(ran==4){
+				 tmp=tmp.next.next.next;
+				 return movimientoBotsY(y,tmp.getPlayer().getHead().abajo.getPosY());
+			 }else{
+				 return "error";
+			 }
+			 }
+		 else{
+				 return "error";
+			 }
+	}
+	
 	
 	/* (non-Javadoc)
 	 * @see java.lang.Thread#run()
@@ -305,7 +412,7 @@ public class ServidorVentana extends Thread implements ActionListener,ChangeList
 				recibido=(JSONObject)flujo.readObject();
 				int validacion=recibido.getInt("val");
 				if(validacion==1){ //El usuario busca una conexion.
-					boolean exito=buscarConexion(recibido.getString("IP"),recibido.getInt("puerto"));//Se intenta conectar al usuario con el servidor. 
+					boolean exito=buscarConexion(recibido.getString("IP"),recibido.getInt("puerto"),recibido.getString("nick"));//Se intenta conectar al usuario con el servidor. 
 					if(exito==false){
 						listaespera.agregar(null, recibido.getString("IP"),recibido.getInt("puerto"));
 						if(falloconexion==false){
@@ -316,7 +423,6 @@ public class ServidorVentana extends Thread implements ActionListener,ChangeList
 					if(empezar==false){// validacion necesario para asegurar que el hilo que envia la informacion del servidor al cliente se inicie una sola vez.
 						hiloE.start();
 						NumBots.start();
-						hiloB.start();
 						empezar=true;
 					}
 						
@@ -371,11 +477,14 @@ public class ServidorVentana extends Thread implements ActionListener,ChangeList
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent ew) {
-		if(ew.getSource()==iniciar){
+		if(ew.getSource()==iniciar){//Se inicia la partida con la configuracion establecida por el usuario.
 			ventana.setVisible(false);
-			pantalla=new Ventana(Integer.parseInt(filas.getText()),Integer.parseInt(columnas.getText()));
+			pantalla=new Ventana(Integer.parseInt(filas.getText()),Integer.parseInt(columnas.getText()));//Se genera la interfaz y la matriz segun se especifico.
 			jugadores=new Jugadores();
 			listaespera=new Jugadores();
 			listabots=new Jugadores();
@@ -394,9 +503,12 @@ public class ServidorVentana extends Thread implements ActionListener,ChangeList
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
+	 */
 	@Override
 	public void stateChanged(ChangeEvent arg0) {
-		if(opcion.isSelected()==true){
+		if(opcion.isSelected()==true){//El usuario desea agregar bots a la partida
 			ventana.add(textBot);
 			ventana.add(numBot);
 			ventana.repaint();
@@ -417,8 +529,6 @@ public class ServidorVentana extends Thread implements ActionListener,ChangeList
 			HiloEnvia envia=new HiloEnvia(principal);
 			principal.hiloE=envia;
 			envia.self=envia;
-			HiloBots bots=new HiloBots(principal);
-			principal.hiloB=bots;
 	}
 
 }

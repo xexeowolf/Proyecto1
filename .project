@@ -66,6 +66,11 @@
 			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/estela4.gif</location>
 		</link>
 		<link>
+			<name>src/Imagenes/estela5.gif</name>
+			<type>1</type>
+			<location>/home/alfredo/imagtron16/estela5.gif</location>
+		</link>
+		<link>
 			<name>src/Imagenes/gas.gif</name>
 			<type>1</type>
 			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/gas.gif</location>
@@ -149,6 +154,26 @@
 			<name>src/Imagenes/moto4izq.gif</name>
 			<type>1</type>
 			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/moto4izq.gif</location>
+		</link>
+		<link>
+			<name>src/Imagenes/moto5abj.gif</name>
+			<type>1</type>
+			<location>/home/alfredo/imagtron16/moto5abj.gif</location>
+		</link>
+		<link>
+			<name>src/Imagenes/moto5arr.gif</name>
+			<type>1</type>
+			<location>/home/alfredo/imagtron16/moto5arr.gif</location>
+		</link>
+		<link>
+			<name>src/Imagenes/moto5der.gif</name>
+			<type>1</type>
+			<location>/home/alfredo/imagtron16/moto5der.gif</location>
+		</link>
+		<link>
+			<name>src/Imagenes/moto5izq.gif</name>
+			<type>1</type>
+			<location>/home/alfredo/imagtron16/moto5izq.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/nitro.gif</name>
