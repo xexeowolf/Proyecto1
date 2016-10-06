@@ -18,6 +18,7 @@ public class MatrizDinamica {
 	public NodoMatriz esqSI;
 	private NodoMatriz esqII;
 	private NodoMatriz esqID;
+	private NodoMatriz centro;
 	private ListaActores actores;
 	
 	
@@ -120,9 +121,7 @@ public class MatrizDinamica {
 			return esqID;
 		}
 		else{
-			moverDistribuir("der",filas/2);
-			moverDistribuir("abj",columnas/2);
-			return distribuir;
+			return centro;
 		}
 	}
 
@@ -293,6 +292,8 @@ public class MatrizDinamica {
 		esqII=current.head;//se inicializa la esquina inferior izquierda
 		esqID=current.tail;//se inicializa la esquina inferior derecha
 		moverDistribuir("der",cantFilas/2);
+		moverDistribuir("abj",cantCol/2);
+		centro=distribuir;
 		moverDistribuir("abj",cantCol/2);
 	}
 	
