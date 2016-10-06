@@ -441,10 +441,10 @@ public class ServidorVentana extends Thread implements ActionListener,ChangeList
 						
 					}
 					switch(numJug){
-					case 1:conexion1=true;break;
-					case 2:conexion2=true;break;
-					case 3:conexion3=true;break;
-					case 4:conexion4=true;break;
+					case 1:conexion1=true;pantalla.textjug1.setText(null);break;
+					case 2:conexion2=true;pantalla.textjug2.setText(null);break;
+					case 3:conexion3=true;pantalla.textjug3.setText(null);break;
+					case 4:conexion4=true;pantalla.textjug4.setText(null);break;
 					}
 				}
 				

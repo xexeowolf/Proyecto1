@@ -85,7 +85,7 @@ public class ClienteVentana extends Thread implements KeyListener {
 			public void actionPerformed(ActionEvent arg1) { //accion realizada por el boton presentado en la segunda ventana de la interfaz.
 				if(arg1.getSource()==pantalla.btn){
 					try{
-						Socket cli= new Socket("192.168.43.116",9095);
+						Socket cli= new Socket("192.168.1.62",9095);
 						JSONObject medio= new JSONObject();
 						medio.put("val",3);
 						medio.put("puerto",PuertoV);
@@ -119,7 +119,7 @@ public class ClienteVentana extends Thread implements KeyListener {
 		pantalla.addWindowListener(new WindowAdapter(){
 			public void windowClosing(WindowEvent ep){ //Ultima comunicacion realizada por el usuario al momento de cerrar la ventana.
 				try{									
-					Socket cli= new Socket("192.168.43.116",9095);
+					Socket cli= new Socket("192.168.1.62",9095);
 					JSONObject medio= new JSONObject();
 					medio.put("val",2);	//Indica que se desea terminar la conexion.
 					medio.put("puerto",PuertoV);
@@ -139,7 +139,7 @@ public class ClienteVentana extends Thread implements KeyListener {
 	 */
 	public void setConexion(){
 		try{
-			Socket cli= new Socket("192.168.43.116",9095);
+			Socket cli= new Socket("192.168.1.62",9095);
 			JSONObject medio= new JSONObject();
 			PuertoV=Integer.parseInt(puerto.getText());
 			medio.put("puerto", PuertoV);
@@ -159,7 +159,7 @@ public class ClienteVentana extends Thread implements KeyListener {
 	 */
 	public void enviar(String dir){
 		try{
-			Socket cli= new Socket("192.168.43.116",9095);
+			Socket cli= new Socket("192.168.1.62",9095);
 			JSONObject medio= new JSONObject();
 			medio.put("val",5);
 			medio.put("direccion", dir);

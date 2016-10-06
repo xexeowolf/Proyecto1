@@ -116,8 +116,13 @@ public class MatrizDinamica {
 		else if(ID==3){
 			return esqII;
 		}
-		else{
+		else if(ID==4){
 			return esqID;
+		}
+		else{
+			moverDistribuir("der",filas/2);
+			moverDistribuir("abj",columnas/2);
+			return distribuir;
 		}
 	}
 
@@ -287,6 +292,8 @@ public class MatrizDinamica {
 		}
 		esqII=current.head;//se inicializa la esquina inferior izquierda
 		esqID=current.tail;//se inicializa la esquina inferior derecha
+		moverDistribuir("der",cantFilas/2);
+		moverDistribuir("abj",cantCol/2);
 	}
 	
 	/**

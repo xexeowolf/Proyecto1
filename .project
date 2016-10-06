@@ -18,52 +18,47 @@
 		<link>
 			<name>src/Imagenes/agregarEstela.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/agregarEstela.gif</location>
+			<location>/home/alfredo/imagtron16/agregarEstela.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/bomba.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/bomba.gif</location>
-		</link>
-		<link>
-			<name>src/Imagenes/carretera.gif</name>
-			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/carretera.gif</location>
+			<location>/home/alfredo/imagtron16/bomba.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/carretera704x704.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/carretera704x704.gif</location>
+			<location>/home/alfredo/imagtron16/carretera704x704.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/escudo.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/escudo.gif</location>
+			<location>/home/alfredo/imagtron16/escudo.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/escudoMoto.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/escudoMoto.gif</location>
+			<location>/home/alfredo/imagtron16/escudoMoto.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/estela1.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/estela1.gif</location>
+			<location>/home/alfredo/imagtron16/estela1.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/estela2.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/estela2.gif</location>
+			<location>/home/alfredo/imagtron16/estela2.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/estela3.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/estela3.gif</location>
+			<location>/home/alfredo/imagtron16/estela3.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/estela4.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/estela4.gif</location>
+			<location>/home/alfredo/imagtron16/estela4.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/estela5.gif</name>
@@ -73,87 +68,87 @@
 		<link>
 			<name>src/Imagenes/gas.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/gas.gif</location>
+			<location>/home/alfredo/imagtron16/gas.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/moto1abj.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/moto1abj.gif</location>
+			<location>/home/alfredo/imagtron16/moto1abj.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/moto1arr.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/moto1arr.gif</location>
+			<location>/home/alfredo/imagtron16/moto1arr.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/moto1der.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/moto1der.gif</location>
+			<location>/home/alfredo/imagtron16/moto1der.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/moto1izq.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/moto1izq.gif</location>
+			<location>/home/alfredo/imagtron16/moto1izq.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/moto2abj.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/moto2abj.gif</location>
+			<location>/home/alfredo/imagtron16/moto2abj.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/moto2arr.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/moto2arr.gif</location>
+			<location>/home/alfredo/imagtron16/moto2arr.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/moto2der.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/moto2der.gif</location>
+			<location>/home/alfredo/imagtron16/moto2der.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/moto2izq.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/moto2izq.gif</location>
+			<location>/home/alfredo/imagtron16/moto2izq.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/moto3abj.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/moto3abj.gif</location>
+			<location>/home/alfredo/imagtron16/moto3abj.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/moto3arr.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/moto3arr.gif</location>
+			<location>/home/alfredo/imagtron16/moto3arr.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/moto3der.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/moto3der.gif</location>
+			<location>/home/alfredo/imagtron16/moto3der.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/moto3izq.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/moto3izq.gif</location>
+			<location>/home/alfredo/imagtron16/moto3izq.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/moto4abj.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/moto4abj.gif</location>
+			<location>/home/alfredo/imagtron16/moto4abj.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/moto4arr.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/moto4arr.gif</location>
+			<location>/home/alfredo/imagtron16/moto4arr.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/moto4der.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/moto4der.gif</location>
+			<location>/home/alfredo/imagtron16/moto4der.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/moto4izq.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/moto4izq.gif</location>
+			<location>/home/alfredo/imagtron16/moto4izq.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/moto5abj.gif</name>
@@ -178,12 +173,12 @@
 		<link>
 			<name>src/Imagenes/nitro.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/nitro.gif</location>
+			<location>/home/alfredo/imagtron16/nitro.gif</location>
 		</link>
 		<link>
 			<name>src/Imagenes/vacio.gif</name>
 			<type>1</type>
-			<location>/home/alfredo/Documentos/Imágenes/imagtron16 (2)/vacio.gif</location>
+			<location>/home/alfredo/imagtron16/vacio.gif</location>
 		</link>
 	</linkedResources>
 </projectDescription>
